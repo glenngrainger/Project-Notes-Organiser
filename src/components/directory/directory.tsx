@@ -4,6 +4,7 @@ import { MdDelete } from "react-icons/md";
 import { useQuery } from "react-query";
 import { CreateFolder, Folder, GetFolders } from "../../helper/cookieHelper";
 import useModal from "../../hooks/useModal";
+import useMutationHelper from "../../hooks/useMutationHelper";
 import { getFolders } from "../../query/queries";
 import { useGeneral } from "../../store/generalStore";
 import { FolderForm, Modal, Footer } from "../modal";
@@ -12,16 +13,13 @@ import List from "./notesList/list";
 const Directory = () => {
   const { currentDirectoryView } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
+  const { addFolderMutation } = useMutationHelper();
 
-  useEffect(() => {
-    CreateFolder({ id: "test", name: "test", notes: [] });
-  }, []);
+  const { data } = useQuery(["folders"], async () => await getFolders(), {
+    initialData: [],
+  });
 
-  const { isLoading, isError, isSuccess, data } = useQuery(
-    ["folders"],
-    async () => await getFolders(),
-    {}
-  );
+  const addFolderHandler = () => saveData(addFolderMutation);
 
   return (
     <div className='flex-1 border-x-2 border-slate-900 flex flex-col'>
@@ -31,25 +29,18 @@ const Directory = () => {
         placeholder={`Search ${currentDirectoryView}`}
       ></input>
       {/* Conditionally pass down data */}
-      <List data={{} as Folder} />
+      <List data={data || []} />
       <div
         className='mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full'
         style={{ position: "relative" }}
       >
         <button
           className='rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium'
-          onClick={
-            () => {
-              if (currentDirectoryView === "folder") {
-                show();
-              }
+          onClick={() => {
+            if (currentDirectoryView === "folder") {
+              show();
             }
-            // CreateFolder({
-            //   id: "test",
-            //   name: "test",
-            //   notes: [],
-            // })
-          }
+          }}
         >
           New {currentDirectoryView === "notes" ? "Note" : "Folder"}
         </button>
@@ -64,12 +55,12 @@ const Directory = () => {
           </li>
         </ul>
       </div>
-
-      {JSON.stringify(data)}
       {isVisible && (
         <Modal
-          Footer={<Footer saveCallback={saveData} closeCallback={hide} />}
-          Form={<FolderForm />}
+          Footer={
+            <Footer saveCallback={addFolderHandler} closeCallback={hide} />
+          }
+          Form={<FolderForm updater={updateFormData} />}
         />
       )}
     </div>

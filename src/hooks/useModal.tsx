@@ -1,3 +1,4 @@
+import { UseMutationResult } from "react-query";
 import useForm from "./useForm";
 import useVisibility from "./useVisibility";
 
@@ -6,8 +7,10 @@ const useModal = () => {
 
   const { formData, updateFormData } = useForm();
 
-  const saveData = () => {
+  const saveData = (mutation: any) => {
     // Save here
+    mutation.mutate(formData);
+
     hide();
   };
 

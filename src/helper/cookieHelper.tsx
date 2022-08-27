@@ -24,6 +24,7 @@ export const CreateFolder = (folder: Folder) => {
   folder.updated = new Date();
 
   cookie.set("folders", JSON.stringify([...folders, folder]));
+  return folder;
 };
 
 export const CreateNote = (folderId: string, note: Note) => {
