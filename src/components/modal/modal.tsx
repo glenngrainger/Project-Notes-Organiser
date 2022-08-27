@@ -8,7 +8,7 @@ const Modal = ({ Footer, Form }: { Footer?: ReactNode; Form: ReactNode }) => {
         <div className='bg-slate-100 p-3 rounded-t-lg text-slate-900'>
           <div className='flex items-center justify-between'>
             <h3 className='font-bold'>New Folder</h3>
-            <MdClose className='text-lg cursor-pointer' />
+            {/* <MdClose className='text-lg cursor-pointer' /> */}
           </div>
         </div>
         {Form}

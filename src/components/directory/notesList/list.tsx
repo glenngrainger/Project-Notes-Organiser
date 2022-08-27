@@ -1,4 +1,6 @@
-const NotesList = () => {
+import { Folder, Note } from "../../../helper/cookieHelper";
+
+const List = ({ data }: { data: Note | Folder }) => {
   return (
     <ul className='overflow-y-auto'>
       {[1, 2, 3, 4, 5, 6].map((x) => (
@@ -14,4 +16,4 @@ const NotesList = () => {
   );
 };
 
-export default NotesList;
+export default List;

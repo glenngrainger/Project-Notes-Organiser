@@ -1,14 +1,28 @@
+import { useEffect } from "react";
 import { BsArrowUpSquareFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
-import { CreateFolder, GetFolders } from "../../helper/cookieHelper";
+import { useQuery } from "react-query";
+import { CreateFolder, Folder, GetFolders } from "../../helper/cookieHelper";
+import useModal from "../../hooks/useModal";
+import { getFolders } from "../../query/queries";
 import { useGeneral } from "../../store/generalStore";
-import { useUser } from "../../store/userStore";
 import { FolderForm, Modal, Footer } from "../modal";
-import NotesList from "./notesList/notesList";
+import List from "./notesList/list";
 
 const Directory = () => {
-  const { isLoggedIn, login, logout } = useUser();
   const { currentDirectoryView } = useGeneral();
+  const { isVisible, show, hide, saveData, updateFormData } = useModal();
+
+  useEffect(() => {
+    CreateFolder({ id: "test", name: "test", notes: [] });
+  }, []);
+
+  const { isLoading, isError, isSuccess, data } = useQuery(
+    ["folders"],
+    async () => await getFolders(),
+    {}
+  );
+
   return (
     <div className='flex-1 border-x-2 border-slate-900 flex flex-col'>
       {currentDirectoryView === "notes" && <NotesTabs />}
@@ -16,19 +30,25 @@ const Directory = () => {
         className='bg-slate-50 w-full p-2 text-sm opacity-75 hover:opacity-100'
         placeholder={`Search ${currentDirectoryView}`}
       ></input>
-      <NotesList />
+      {/* Conditionally pass down data */}
+      <List data={{} as Folder} />
       <div
         className='mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full'
         style={{ position: "relative" }}
       >
         <button
           className='rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium'
-          onClick={() =>
-            CreateFolder({
-              id: "test",
-              name: "test",
-              notes: [],
-            })
+          onClick={
+            () => {
+              if (currentDirectoryView === "folder") {
+                show();
+              }
+            }
+            // CreateFolder({
+            //   id: "test",
+            //   name: "test",
+            //   notes: [],
+            // })
           }
         >
           New {currentDirectoryView === "notes" ? "Note" : "Folder"}
@@ -40,11 +60,18 @@ const Directory = () => {
         >
           <li className='p-2 flex items-center justify-between gap-2 cursor-pointer'>
             Bulk Delete
-            <MdDelete onClick={() => login()} />
+            <MdDelete onClick={() => {}} />
           </li>
         </ul>
       </div>
-      <Modal Footer={<Footer />} Form={<FolderForm />} />
+
+      {JSON.stringify(data)}
+      {isVisible && (
+        <Modal
+          Footer={<Footer saveCallback={saveData} closeCallback={hide} />}
+          Form={<FolderForm />}
+        />
+      )}
     </div>
   );
 };
