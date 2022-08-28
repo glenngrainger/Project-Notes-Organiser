@@ -10,13 +10,12 @@ const useFolder = () => {
     currentDirectoryView,
     selectedFolderId,
   } = useGeneral();
+  const queryClient = useQueryClient();
 
   const folderSelected = (id: string) => {
     setSelectedFolderId(id);
     setDirectoryView("notes");
   };
-
-  const queryClient = useQueryClient();
 
   const selectedFolder = useMemo(() => {
     const data = queryClient.getQueryData("folders") as Folder[];

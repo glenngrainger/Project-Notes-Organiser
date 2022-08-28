@@ -1,4 +1,5 @@
 import create from "zustand";
+import { Note } from "../helper/cookieHelper";
 
 interface General {
   currentDirectoryView: "folder" | "notes";
@@ -9,6 +10,10 @@ interface General {
   selectedNoteId: string | undefined;
   setSelectedFolderId: (id: string) => void;
   setSelectedNoteId: (id: string) => void;
+  isCreatingNote: boolean;
+  setIsCreatingNote: (value: boolean) => void;
+  editingNoteData: Note;
+  setEditingNoteData: (key: string, value: any) => void;
 }
 
 const useStore = create<General>((set) => ({
@@ -22,6 +27,13 @@ const useStore = create<General>((set) => ({
   selectedNoteId: undefined,
   setSelectedFolderId: (id) => set(() => ({ selectedFolderId: id })),
   setSelectedNoteId: (id) => set(() => ({ selectedNoteId: id })),
+  isCreatingNote: false,
+  setIsCreatingNote: (value) => set(() => ({ isCreatingNote: value })),
+  editingNoteData: { content: "", name: "" },
+  setEditingNoteData: (key: string, value: any) =>
+    set((prev) => ({
+      editingNoteData: { ...prev.editingNoteData, [key]: value },
+    })),
 }));
 
 export const useGeneral = () => useStore((state) => state);

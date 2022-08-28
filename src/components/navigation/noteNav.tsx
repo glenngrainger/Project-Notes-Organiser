@@ -34,7 +34,7 @@ const NoteNav = () => {
             <>
               <BsFolderFill className='mr-4 text-lg' />
               <div>
-                <p>Selected a Folder</p>
+                <p>Selected Folder</p>
                 <span className='font-semibold text-sm'>1 Folder</span>
               </div>
               <BsCaretUpFill
@@ -48,7 +48,11 @@ const NoteNav = () => {
       <div className='border-x-2 border-slate-900 flex-1'></div>
       <div className='border-x-2 border-slate-900 flex-1'></div>
       <div className='border-x-2 border-slate-900 flex-1 flex items-center justify-end'>
-        <button className='rounded bg-slate-50 px-2 font-semibold py-1 mr-2 flex items-center'>
+        <button
+          className='rounded bg-slate-50 px-2 font-semibold py-1 mr-2 flex items-center disabled:bg-slate-300 cursor-not-allowed'
+          disabled
+          title='Google implementation coming soon'
+        >
           Login with Google
           <AiFillGoogleCircle className='ml-1 text-blue-700' />
         </button>

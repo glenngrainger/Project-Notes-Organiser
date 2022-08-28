@@ -1,12 +1,12 @@
 import { useCallback } from "react";
 import { Folder, Note } from "../../../helper/cookieHelper";
-import useFile from "../../../hooks/useFile";
+import useNote from "../../../hooks/useNote";
 import useFolder from "../../../hooks/useFolder";
 
 const List = ({ data }: { data: Note[] | Folder[] }) => {
   const { folderSelected, currentDirectoryView, selectedFolderId } =
     useFolder();
-  const { noteSelected, selectedNoteId } = useFile();
+  const { noteSelected, selectedNoteId } = useNote();
 
   const listItemClickedHandler = useCallback(
     (id: string) => {

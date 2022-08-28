@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { BsArrowUpSquareFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { useQuery } from "react-query";
@@ -11,7 +11,8 @@ import { FolderForm, Modal, Footer } from "../modal";
 import List from "./notesList/list";
 
 const Directory = () => {
-  const { currentDirectoryView, selectedFolderId } = useGeneral();
+  const { currentDirectoryView, selectedFolderId, setIsCreatingNote } =
+    useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
   const { addFolderMutation } = useMutationHelper();
 
@@ -33,6 +34,14 @@ const Directory = () => {
   );
 
   const addFolderHandler = () => saveData(addFolderMutation);
+
+  const newResourceClickedHandler = useCallback(() => {
+    if (currentDirectoryView === "folder") {
+      show();
+    } else {
+      setIsCreatingNote(true);
+    }
+  }, [currentDirectoryView]);
 
   const getListData = useMemo(() => {
     if (currentDirectoryView === "folder") {
@@ -57,11 +66,7 @@ const Directory = () => {
       >
         <button
           className='rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium'
-          onClick={() => {
-            if (currentDirectoryView === "folder") {
-              show();
-            }
-          }}
+          onClick={newResourceClickedHandler}
         >
           New {currentDirectoryView === "notes" ? "Note" : "Folder"}
         </button>
