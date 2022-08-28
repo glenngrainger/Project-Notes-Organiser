@@ -1,7 +1,8 @@
 import cookie from "js-cookie";
+import { v4 as uuidv4 } from "uuid";
 
 export interface Folder {
-  id: string;
+  id?: string;
   name: string;
   created?: Date;
   updated?: Date;
@@ -9,17 +10,21 @@ export interface Folder {
 }
 
 export interface Note {
-  id: string;
+  id?: string;
   name: string;
+  folderId?: string;
   content: string;
   created?: Date;
   updated?: Date;
+  isComplete?: boolean;
 }
 
 export const CreateFolder = (folder: Folder) => {
   let foldersString = cookie.get("folders");
   let folders = foldersString ? (JSON.parse(foldersString) as Folder[]) : [];
 
+  folder.id = uuidv4();
+  folder.name = folder.name;
   folder.created = new Date();
   folder.updated = new Date();
 
@@ -34,6 +39,10 @@ export const CreateNote = (folderId: string, note: Note) => {
 
   let folders = foldersString ? (JSON.parse(foldersString) as Folder[]) : [];
 
+  note.id = uuidv4();
+  note.name = note.name;
+  note.folderId = note.folderId;
+  note.isComplete = false;
   note.created = new Date();
   note.updated = new Date();
 

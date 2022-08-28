@@ -6,6 +6,8 @@ const useForm = () => {
     setFormData((prev) => ({ ...prev, [key]: value }));
   };
 
-  return { formData, updateFormData } as const;
+  const clearData = () => setFormData({});
+
+  return { formData, updateFormData, clearData } as const;
 };
 export default useForm;

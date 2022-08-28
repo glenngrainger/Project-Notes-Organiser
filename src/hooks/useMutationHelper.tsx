@@ -8,8 +8,8 @@ const useMutationHelper = () => {
   const addFolderMutation = useMutation(addFolder, {
     onSuccess: (newFolder) => {
       queryClient.setQueryData(["folders"], (prev: any) => [
-        ...prev,
         newFolder,
+        ...prev,
       ]);
     },
   });

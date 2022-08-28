@@ -5,10 +5,13 @@ import {
   BsCaretUpFill,
   BsFileFill,
 } from "react-icons/bs";
+import useFolder from "../../hooks/useFolder";
 import { useGeneral } from "../../store/generalStore";
 
 const NoteNav = () => {
   const { setDirectoryView, currentDirectoryView } = useGeneral();
+  const { selectedFolder } = useFolder();
+
   return (
     <div className='min-h-[4rem] flex justify-evenly bg-gray-700'>
       <div className='border-x-2 border-slate-900 flex-1'>
@@ -17,9 +20,9 @@ const NoteNav = () => {
             <>
               <BsFileFill className='mr-4 text-lg' />
               <div>
-                <p>Selected folder</p>
+                <p>Selected Folder</p>
                 <span className='font-semibold text-sm'>
-                  Get from react query cache
+                  {selectedFolder?.name || "No Folder Selected"}
                 </span>
               </div>
               <BsCaretDownFill
@@ -31,10 +34,8 @@ const NoteNav = () => {
             <>
               <BsFolderFill className='mr-4 text-lg' />
               <div>
-                <p>Folders</p>
-                <span className='font-semibold text-sm'>
-                  Select a folder to view notes
-                </span>
+                <p>Selected a Folder</p>
+                <span className='font-semibold text-sm'>1 Folder</span>
               </div>
               <BsCaretUpFill
                 className='ml-auto cursor-pointer'

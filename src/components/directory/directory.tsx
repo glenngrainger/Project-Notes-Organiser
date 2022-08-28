@@ -1,25 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { BsArrowUpSquareFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { useQuery } from "react-query";
 import { CreateFolder, Folder, GetFolders } from "../../helper/cookieHelper";
 import useModal from "../../hooks/useModal";
 import useMutationHelper from "../../hooks/useMutationHelper";
-import { getFolders } from "../../query/queries";
+import { getFolders, getNotes } from "../../query/queries";
 import { useGeneral } from "../../store/generalStore";
 import { FolderForm, Modal, Footer } from "../modal";
 import List from "./notesList/list";
 
 const Directory = () => {
-  const { currentDirectoryView } = useGeneral();
+  const { currentDirectoryView, selectedFolderId } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
   const { addFolderMutation } = useMutationHelper();
 
-  const { data } = useQuery(["folders"], async () => await getFolders(), {
-    initialData: [],
-  });
+  const { data: folders } = useQuery(
+    ["folders"],
+    async () => await getFolders(),
+    {
+      initialData: [],
+    }
+  );
+
+  const { data: notes } = useQuery(
+    ["notes"],
+    async () => await getNotes(selectedFolderId || ""),
+    {
+      enabled: selectedFolderId !== undefined,
+      initialData: [],
+    }
+  );
 
   const addFolderHandler = () => saveData(addFolderMutation);
+
+  const getListData = useMemo(() => {
+    if (currentDirectoryView === "folder") {
+      return folders || [];
+    } else {
+      return notes || [];
+    }
+  }, [folders, notes, currentDirectoryView]);
 
   return (
     <div className='flex-1 border-x-2 border-slate-900 flex flex-col'>
@@ -29,7 +50,7 @@ const Directory = () => {
         placeholder={`Search ${currentDirectoryView}`}
       ></input>
       {/* Conditionally pass down data */}
-      <List data={data || []} />
+      <List data={getListData} />
       <div
         className='mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full'
         style={{ position: "relative" }}

@@ -3,22 +3,19 @@ import useForm from "./useForm";
 import useVisibility from "./useVisibility";
 
 const useModal = () => {
-  const { isVisible, show, hide } = useVisibility(false);
+  const { isVisible, show, hide: hideModal } = useVisibility(false);
 
-  const { formData, updateFormData } = useForm();
+  const { formData, updateFormData, clearData } = useForm();
 
   const saveData = (mutation: any) => {
-    // Save here
     mutation.mutate(formData);
-
     hide();
   };
 
-  // on save update
-
-  // on close, reset
-
-  //
+  const hide = () => {
+    clearData();
+    hideModal();
+  };
 
   return { isVisible, show, hide, saveData, updateFormData } as const;
 };
