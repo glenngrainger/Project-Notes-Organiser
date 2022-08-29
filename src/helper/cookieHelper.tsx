@@ -61,6 +61,7 @@ export const UpdateNote = (folderId: string, note: Note) => {
 
   if (!noteToUpdate) return;
   noteToUpdate.name = note.name;
+  noteToUpdate.content = note.content;
   noteToUpdate.isComplete = note.isComplete;
   noteToUpdate.updated = new Date();
 

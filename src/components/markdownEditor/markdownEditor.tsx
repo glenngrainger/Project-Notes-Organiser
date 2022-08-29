@@ -8,11 +8,13 @@ const MarkDownEditor = () => {
   //   setDomNode(node); // trigger re-render on changes
   //   // ...
   // }, []);
-  const { setEditingNoteData, editingNoteData, isCreatingNote } = useGeneral();
+  const {
+    setEditingNoteData,
+    editingNoteData,
+    isCreatingNote,
+    selectedNoteId,
+  } = useGeneral();
   let easyMDEElement = useRef<EasyMDE | undefined>();
-  //   let value = useRef("");
-
-  // If is saving, set the value?
 
   const onChangeHandler = useCallback(() => {
     const value = easyMDEElement.current?.value() || "";
@@ -33,7 +35,7 @@ const MarkDownEditor = () => {
       easyMDEElement.current = undefined;
       document.querySelectorAll(".EasyMDEContainer").forEach((x) => x.remove());
     };
-  }, [isCreatingNote]);
+  }, [isCreatingNote, selectedNoteId]);
 
   return <textarea ref={easyMDEElement}></textarea>;
 };

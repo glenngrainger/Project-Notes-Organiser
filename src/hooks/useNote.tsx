@@ -40,7 +40,7 @@ const useNote = () => {
       var note = data.find((x) => x.id === id);
       if (note) {
         // replaceEditingNoteData({ ...note });
-        return note;
+        return { ...note };
       }
       return undefined;
     }
