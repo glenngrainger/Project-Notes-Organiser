@@ -1,5 +1,6 @@
 import {
   CreateFolder,
+  CreateNote,
   Folder,
   GetFolders as GetFoldersCookie,
   GetNotes,
@@ -19,4 +20,8 @@ export const addFolder = async (folder: Folder) => {
     name: folder.name,
     notes: [],
   });
+};
+
+export const addNote = async (folderId: string, note: Note) => {
+  return CreateNote(folderId, note);
 };

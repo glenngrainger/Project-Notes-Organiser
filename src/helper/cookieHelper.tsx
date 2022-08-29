@@ -48,6 +48,7 @@ export const CreateNote = (folderId: string, note: Note) => {
 
   folders.find((x) => x.id === folderId)?.notes.push(note);
   cookie.set("folders", JSON.stringify(folders));
+  return note;
 };
 
 export const GetFolders = () => {

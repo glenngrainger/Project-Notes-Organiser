@@ -11,8 +11,12 @@ import { FolderForm, Modal, Footer } from "../modal";
 import List from "./notesList/list";
 
 const Directory = () => {
-  const { currentDirectoryView, selectedFolderId, setIsCreatingNote } =
-    useGeneral();
+  const {
+    currentDirectoryView,
+    selectedFolderId,
+    setIsCreatingNote,
+    resetEditingNoteData,
+  } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
   const { addFolderMutation } = useMutationHelper();
 
@@ -39,6 +43,7 @@ const Directory = () => {
     if (currentDirectoryView === "folder") {
       show();
     } else {
+      resetEditingNoteData();
       setIsCreatingNote(true);
     }
   }, [currentDirectoryView]);
@@ -58,7 +63,6 @@ const Directory = () => {
         className='bg-slate-50 w-full p-2 text-sm opacity-75 hover:opacity-100'
         placeholder={`Search ${currentDirectoryView}`}
       ></input>
-      {/* Conditionally pass down data */}
       <List data={getListData} />
       <div
         className='mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full'

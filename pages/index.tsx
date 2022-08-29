@@ -10,8 +10,15 @@ import { AiFillGoogleCircle } from "react-icons/ai";
 import { NoteNav } from "../src/components/navigation";
 import { Directory } from "../src/components/directory";
 import { Editor } from "../src/components/editor";
+import useNote from "../src/hooks/useNote";
+import useMutationHelper from "../src/hooks/useMutationHelper";
+import { useGeneral } from "../src/store/generalStore";
 
 const Home: NextPage = () => {
+  const { editingNoteData, isCreatingNote } = useGeneral();
+  const { addNoteMutation } = useMutationHelper();
+  const saveNoteHandler = () => {};
+
   return (
     <div className='h-screen w-screen'>
       {/* <nav className='h-18 px-6 py-4 flex justify-between items-center bg-gray-700'>
@@ -36,8 +43,11 @@ const Home: NextPage = () => {
         <Editor />
       </div>
       <div className='fixed bottom-4 right-4'>
-        <button className='rounded bg-slate-300 text-slate-500 px-3 py-1 font-semibold'>
-          Save
+        <button
+          className='rounded bg-slate-300 text-slate-500 px-3 py-1 font-semibold'
+          onClick={saveNoteHandler}
+        >
+          {isCreatingNote ? "Create" : "Save"}
         </button>
       </div>
     </div>

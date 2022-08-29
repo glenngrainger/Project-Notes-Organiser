@@ -17,7 +17,10 @@ const Editor = () => {
         <input
           className='w-fit rounded bg-transparent focus:bg-slate-50 hover:bg-slate-50 font-semibold px-2 py-1 text-slate-50 hover:text-slate-900 focus:text-slate-900'
           value={editingNoteData.name}
-          onChange={(e) => setEditingNoteData("name", e.currentTarget.value)}
+          onChange={(e) => {
+            setEditingNoteData("name", e.currentTarget.value);
+            console.log(e.currentTarget.value);
+          }}
         />
         {/* button group */}
         <div className='ml-auto flex items-center gap-3'>
@@ -25,11 +28,17 @@ const Editor = () => {
             Delete
           </button>
           {editingNoteData.isComplete ? (
-            <button className='bg-green-900 text-sm py-1 px-2 rounded-sm text-slate-50 font-semibold'>
+            <button
+              className='bg-green-900 text-sm py-1 px-2 rounded-sm text-slate-50 font-semibold'
+              onClick={() => setEditingNoteData("isComplete", false)}
+            >
               Set as In Progress
             </button>
           ) : (
-            <button className='bg-red-900 text-sm py-1 px-2 rounded-sm text-slate-50 font-semibold'>
+            <button
+              className='bg-red-900 text-sm py-1 px-2 rounded-sm text-slate-50 font-semibold'
+              onClick={() => setEditingNoteData("isComplete", true)}
+            >
               Set as Complete
             </button>
           )}
