@@ -27,14 +27,13 @@ export const CreateFolder = (folder: Folder) => {
   folder.name = folder.name;
   folder.created = new Date();
   folder.updated = new Date();
+  folder.notes = [];
 
   cookie.set("folders", JSON.stringify([...folders, folder]));
   return folder;
 };
 
 export const CreateNote = (folderId: string, note: Note) => {
-  if (!folderId) return;
-
   let foldersString = cookie.get("folders");
 
   let folders = foldersString ? (JSON.parse(foldersString) as Folder[]) : [];
@@ -49,6 +48,24 @@ export const CreateNote = (folderId: string, note: Note) => {
   folders.find((x) => x.id === folderId)?.notes.push(note);
   cookie.set("folders", JSON.stringify(folders));
   return note;
+};
+
+export const UpdateNote = (folderId: string, note: Note) => {
+  let foldersString = cookie.get("folders");
+
+  let folders = foldersString ? (JSON.parse(foldersString) as Folder[]) : [];
+
+  var noteToUpdate = folders
+    .find((x) => x.id === folderId)
+    ?.notes.find((x) => x.id === note.id);
+
+  if (!noteToUpdate) return;
+  noteToUpdate.name = note.name;
+  noteToUpdate.isComplete = note.isComplete;
+  noteToUpdate.updated = new Date();
+
+  cookie.set("folders", JSON.stringify(folders));
+  return noteToUpdate;
 };
 
 export const GetFolders = () => {

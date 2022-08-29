@@ -15,6 +15,7 @@ interface General {
   editingNoteData: Note;
   setEditingNoteData: (key: string, value: any) => void;
   resetEditingNoteData: () => void;
+  replaceEditingNoteData: (note: Note) => void;
 }
 
 const useStore = create<General>((set) => ({
@@ -42,6 +43,10 @@ const useStore = create<General>((set) => ({
       return {
         editingNoteData: { content: "", name: "New Note!", isComplete: false },
       };
+    }),
+  replaceEditingNoteData: (note) =>
+    set((prev) => {
+      return { editingNoteData: note };
     }),
 }));
 

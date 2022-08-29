@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { Folder, Note } from "../../../helper/cookieHelper";
 import useNote from "../../../hooks/useNote";
 import useFolder from "../../../hooks/useFolder";
@@ -8,21 +8,23 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
     useFolder();
   const { noteSelected, selectedNoteId } = useNote();
 
-  const listItemClickedHandler = useCallback(
-    (id: string) => {
-      if (currentDirectoryView === "folder") {
-        folderSelected(id);
-      } else {
-        noteSelected(id);
-      }
-    },
-    [selectedNoteId, selectedFolderId, currentDirectoryView]
-  );
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
+  const listItemClickedHandler = (id: string) => {
+    if (currentDirectoryView === "folder") {
+      folderSelected(id);
+    } else {
+      noteSelected(id);
+    }
+  };
 
   return (
     <ul className='overflow-y-auto'>
       {data.map((x) => (
         <li
+          key={x.id}
           className='p-2 flex items-center bg-slate-50 border-y-2 border-gray-100 hover:bg-slate-200 cursor-pointer'
           onClick={() => listItemClickedHandler(x?.id || "")}
         >

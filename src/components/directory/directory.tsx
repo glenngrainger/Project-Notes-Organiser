@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo } from "react";
 import { BsArrowUpSquareFill } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import { CreateFolder, Folder, GetFolders } from "../../helper/cookieHelper";
 import useModal from "../../hooks/useModal";
 import useMutationHelper from "../../hooks/useMutationHelper";
@@ -29,7 +29,7 @@ const Directory = () => {
   );
 
   const { data: notes } = useQuery(
-    ["notes"],
+    ["notes", selectedFolderId],
     async () => await getNotes(selectedFolderId || ""),
     {
       enabled: selectedFolderId !== undefined,
@@ -49,12 +49,15 @@ const Directory = () => {
   }, [currentDirectoryView]);
 
   const getListData = useMemo(() => {
+    console.log("render");
+    console.log(selectedFolderId);
     if (currentDirectoryView === "folder") {
       return folders || [];
     } else {
+      // queryClient.invalidateQueries(["notes"]);
       return notes || [];
     }
-  }, [folders, notes, currentDirectoryView]);
+  }, [folders, notes, currentDirectoryView, selectedFolderId]);
 
   return (
     <div className='flex-1 border-x-2 border-slate-900 flex flex-col'>

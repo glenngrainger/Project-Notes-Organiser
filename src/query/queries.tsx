@@ -5,6 +5,7 @@ import {
   GetFolders as GetFoldersCookie,
   GetNotes,
   Note,
+  UpdateNote,
 } from "../helper/cookieHelper";
 
 export const getFolders = async () => {
@@ -24,4 +25,8 @@ export const addFolder = async (folder: Folder) => {
 
 export const addNote = async (folderId: string, note: Note) => {
   return CreateNote(folderId, note);
+};
+
+export const updateNote = async (folderId: string, note: Note) => {
+  return UpdateNote(folderId, note);
 };

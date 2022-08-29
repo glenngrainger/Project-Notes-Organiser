@@ -25,6 +25,7 @@ const MarkDownEditor = () => {
     if (!easyMDEElement.current) {
       easyMDEElement.current = new EasyMDE({ element: easyMDEElement.current });
       easyMDEElement.current.codemirror.on("change", onChangeHandler);
+      easyMDEElement.current.value(editingNoteData.content);
     }
 
     return () => {

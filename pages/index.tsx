@@ -1,23 +1,35 @@
 import type { NextPage } from "next";
-import {
-  BsCaretDownFill,
-  BsPlus,
-  BsArrowUpSquareFill,
-  BsFolderFill,
-} from "react-icons/bs";
-import { MdOutlineNotes } from "react-icons/md";
-import { AiFillGoogleCircle } from "react-icons/ai";
 import { NoteNav } from "../src/components/navigation";
 import { Directory } from "../src/components/directory";
 import { Editor } from "../src/components/editor";
 import useNote from "../src/hooks/useNote";
 import useMutationHelper from "../src/hooks/useMutationHelper";
 import { useGeneral } from "../src/store/generalStore";
+import { useCallback } from "react";
 
 const Home: NextPage = () => {
-  const { editingNoteData, isCreatingNote } = useGeneral();
-  const { addNoteMutation } = useMutationHelper();
-  const saveNoteHandler = () => {};
+  const {
+    editingNoteData,
+    isCreatingNote,
+    selectedFolderId,
+    setIsCreatingNote,
+  } = useGeneral();
+  const { addNoteMutation, updateNoteMutation } = useMutationHelper();
+  const saveNoteHandler = () => {
+    console.log(editingNoteData);
+    if (isCreatingNote && selectedFolderId) {
+      addNoteMutation.mutate({
+        folderId: selectedFolderId,
+        note: editingNoteData,
+      });
+      setIsCreatingNote(false);
+    } else if (selectedFolderId) {
+      updateNoteMutation.mutate({
+        folderId: selectedFolderId,
+        note: editingNoteData,
+      });
+    }
+  };
 
   return (
     <div className='h-screen w-screen'>
