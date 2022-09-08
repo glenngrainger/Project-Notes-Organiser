@@ -15,6 +15,7 @@ const Home: NextPage = () => {
   } = useGeneral();
   const { addNoteMutation, updateNoteMutation } = useMutationHelper();
   const saveNoteHandler = () => {
+    if (editingNoteData === undefined) return;
     console.log(editingNoteData);
     if (isCreatingNote && selectedFolderId) {
       addNoteMutation.mutate({

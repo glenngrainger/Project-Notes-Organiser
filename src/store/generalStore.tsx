@@ -14,7 +14,7 @@ interface General {
   setSelectedNoteId: (id: string) => void;
   isCreatingNote: boolean;
   setIsCreatingNote: (value: boolean) => void;
-  editingNoteData: Note;
+  editingNoteData: Note | undefined;
   setEditingNoteData: (key: string, value: any) => void;
   resetEditingNoteData: () => void;
   replaceEditingNoteData: (note: Note) => void;
@@ -38,7 +38,7 @@ const useStore = create<General>((set) => ({
   setSelectedNoteId: (id) => set(() => ({ selectedNoteId: id })),
   isCreatingNote: false,
   setIsCreatingNote: (value) => set(() => ({ isCreatingNote: value })),
-  editingNoteData: { content: "test2", name: "test" },
+  editingNoteData: undefined,
   setEditingNoteData: (key: string, value: any) =>
     set((prev) => {
       const data = prev.editingNoteData as any;

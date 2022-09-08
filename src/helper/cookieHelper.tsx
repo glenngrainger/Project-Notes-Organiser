@@ -107,6 +107,24 @@ export const RemoveNote = (noteId: string, folderId: string) => {
 };
 
 export const RemoveFolder = (folderId: string) => {
-  const folders = GetFolders().filter((x) => x.id !== folderId);
+  let folders = GetFolders().filter((x) => x.id !== folderId);
   cookie.set("folders", JSON.stringify(folders));
 };
+
+export const BulkRemoveNotes = (folderId: string, noteIds: string[]) => {
+  let folders = GetFolders();
+  let folder = folders.find((x) => x.id === folderId);
+  if (folder === undefined) return;
+  folder.notes = folder.notes.filter((x) => !noteIds.includes(x?.id || ""));
+  cookie.set(
+    "folders",
+    JSON.stringify([...folders.filter((x) => x.id !== folderId), folder])
+  );
+  return folders;
+};
+
+export const BulkSetComplete = (
+  folderId: string,
+  noteIds: string[],
+  status: boolean
+) => {};
