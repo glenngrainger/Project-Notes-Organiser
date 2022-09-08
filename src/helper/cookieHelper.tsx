@@ -1,21 +1,22 @@
 import cookie from "js-cookie";
+import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
-export interface Folder {
+interface BaseModel {
   id?: string;
+  created?: Date | string;
+  updated?: Date | string;
+}
+
+export interface Folder extends BaseModel {
   name: string;
-  created?: Date;
-  updated?: Date;
   notes: Note[];
 }
 
-export interface Note {
-  id?: string;
+export interface Note extends BaseModel {
   name: string;
   folderId?: string;
   content: string;
-  created?: Date;
-  updated?: Date;
   isComplete?: boolean;
 }
 
@@ -25,8 +26,9 @@ export const CreateFolder = (folder: Folder) => {
 
   folder.id = uuidv4();
   folder.name = folder.name;
-  folder.created = new Date();
-  folder.updated = new Date();
+  folder.created = moment(moment.now()).format("YYYY-MM-DD hh:mm");
+  folder.updated = moment(moment.now()).format("YYYY-MM-DD hh:mm");
+
   folder.notes = [];
 
   cookie.set("folders", JSON.stringify([...folders, folder]));
@@ -42,8 +44,8 @@ export const CreateNote = (folderId: string, note: Note) => {
   note.name = note.name;
   note.folderId = note.folderId;
   note.isComplete = false;
-  note.created = new Date();
-  note.updated = new Date();
+  note.created = moment(moment.now()).format("YYYY-MM-DD hh:mm");
+  note.updated = moment(moment.now()).format("YYYY-MM-DD hh:mm");
 
   folders.find((x) => x.id === folderId)?.notes.push(note);
   cookie.set("folders", JSON.stringify(folders));
