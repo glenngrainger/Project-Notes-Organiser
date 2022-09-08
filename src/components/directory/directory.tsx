@@ -1,10 +1,24 @@
-import { useCallback, useEffect, useMemo } from "react";
-import { BsArrowUpSquareFill } from "react-icons/bs";
+import React from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  BsArrowUpSquareFill,
+  BsCaretDownFill,
+  BsCaretUpFill,
+  BsFileFill,
+  BsFolderFill,
+} from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { useQuery, useQueryClient } from "react-query";
-import { CreateFolder, Folder, GetFolders } from "../../helper/cookieHelper";
+import {
+  CreateFolder,
+  Folder,
+  GetFolders,
+  Note,
+} from "../../helper/cookieHelper";
+import useFolder from "../../hooks/useFolder";
 import useModal from "../../hooks/useModal";
 import useMutationHelper from "../../hooks/useMutationHelper";
+import useVisibility from "../../hooks/useVisibility";
 import { getFolders, getNotes } from "../../query/queries";
 import { useGeneral } from "../../store/generalStore";
 import { FolderForm, Modal, Footer } from "../modal";
@@ -16,9 +30,13 @@ const Directory = () => {
     selectedFolderId,
     setIsCreatingNote,
     resetEditingNoteData,
+    setDirectoryView,
+    isCompletedSelected,
   } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
   const { addFolderMutation } = useMutationHelper();
+  const { selectedFolder } = useFolder();
+  const [searchInput, setSearchInput] = useState("");
 
   const { data: folders } = useQuery(
     ["folders"],
@@ -49,22 +67,82 @@ const Directory = () => {
   }, [currentDirectoryView]);
 
   const getListData = useMemo(() => {
-    console.log("render");
-    console.log(selectedFolderId);
     if (currentDirectoryView === "folder") {
       return folders || [];
     } else {
-      // queryClient.invalidateQueries(["notes"]);
-      return notes || [];
+      if (notes === undefined) return [];
+      if (isCompletedSelected) {
+        return notes.filter(
+          (x) =>
+            x.isComplete &&
+            (searchInput !== ""
+              ? x.name.toLowerCase().includes(searchInput.toLowerCase())
+              : true)
+        );
+      }
+      return notes.filter(
+        (x) =>
+          !x.isComplete &&
+          (searchInput !== ""
+            ? x.name.toLowerCase().includes(searchInput.toLowerCase())
+            : true)
+      );
     }
-  }, [folders, notes, currentDirectoryView, selectedFolderId]);
+  }, [
+    folders,
+    notes,
+    currentDirectoryView,
+    selectedFolderId,
+    isCompletedSelected,
+    searchInput,
+  ]);
+
+  const searchChangeHandler = (e: any) => {
+    setSearchInput(e.currentTarget.value);
+  };
 
   return (
     <div className='flex-1 border-x-2 border-slate-900 flex flex-col'>
+      <div className='flex justify-evenly bg-gray-700'>
+        <div className='flex-1'>
+          <div className='flex items-center p-2 text-slate-50'>
+            {currentDirectoryView === "notes" ? (
+              <>
+                <BsFileFill className='mr-4 text-lg' />
+                <div>
+                  <p>Selected Folder</p>
+                  <span className='font-semibold text-sm'>
+                    {selectedFolder?.name || "No Folder Selected"}
+                  </span>
+                </div>
+                <BsCaretDownFill
+                  className='ml-auto cursor-pointer'
+                  onClick={() => setDirectoryView("folder")}
+                />
+              </>
+            ) : (
+              <>
+                <BsFolderFill className='mr-4 text-lg' />
+                <div>
+                  <p>Selected Folder</p>
+                  <span className='font-semibold text-sm'>
+                    {folders?.length || 0} Folder
+                  </span>
+                </div>
+                <BsCaretUpFill
+                  className='ml-auto cursor-pointer'
+                  onClick={(e) => setDirectoryView("notes")}
+                />
+              </>
+            )}
+          </div>
+        </div>
+      </div>
       {currentDirectoryView === "notes" && <NotesTabs />}
       <input
         className='bg-slate-50 w-full p-2 text-sm opacity-75 hover:opacity-100'
         placeholder={`Search ${currentDirectoryView}`}
+        onChange={searchChangeHandler}
       ></input>
       <List data={getListData} />
       <div
@@ -77,16 +155,7 @@ const Directory = () => {
         >
           New {currentDirectoryView === "notes" ? "Note" : "Folder"}
         </button>
-        <BsArrowUpSquareFill className='text-3xl font-semibold text-slate-900 cursor-pointer' />
-        <ul
-          className='bg-slate-900 font-semibold rounded text-slate-50 text-sm'
-          style={{ position: "absolute", bottom: "3.5rem", right: "0.5rem" }}
-        >
-          <li className='p-2 flex items-center justify-between gap-2 cursor-pointer'>
-            Bulk Delete
-            <MdDelete onClick={() => {}} />
-          </li>
-        </ul>
+        <Menu />
       </div>
       {isVisible && (
         <Modal
@@ -124,6 +193,49 @@ const NotesTabs = () => {
         Completed
       </div>
     </div>
+  );
+};
+
+const Menu = () => {
+  const { isVisible, toggleVisibility } = useVisibility(false);
+  const { setBulkMode, isBulkMode } = useGeneral();
+
+  const deleteHandler = () => {
+    setBulkMode(true);
+  };
+
+  const setCompleteHandler = () => {
+    setBulkMode(true);
+  };
+
+  const options: { text: string; action: () => void }[] = [
+    { text: "Bulk Delete", action: deleteHandler },
+    { text: "Bulk Set Complete", action: setCompleteHandler },
+  ];
+
+  return (
+    <React.Fragment>
+      <BsArrowUpSquareFill
+        className='text-3xl font-semibold text-slate-900 cursor-pointer'
+        onClick={toggleVisibility}
+      />
+      {isVisible && (
+        <ul
+          className='bg-slate-900 font-semibold rounded text-slate-50 text-sm'
+          style={{ position: "absolute", bottom: "3.5rem", right: "0.5rem" }}
+        >
+          {options.map((x) => (
+            <li
+              className='p-2 flex items-center justify-between gap-2 cursor-pointer'
+              onClick={x.action}
+            >
+              {x.text}
+              {/* <MdDelete onClick={() => {}} /> */}
+            </li>
+          ))}
+        </ul>
+      )}
+    </React.Fragment>
   );
 };
 export default Directory;

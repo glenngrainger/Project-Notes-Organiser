@@ -95,3 +95,18 @@ export const SetNote = (folderId: string, note: Note) => {
   folder.notes = [...folder.notes, note];
   cookie.set("folders", JSON.stringify(folders));
 };
+
+export const RemoveNote = (noteId: string, folderId: string) => {
+  let folders = GetFolders();
+  var folder = folders.find((x) => x.id === folderId);
+  if (folder === undefined) return undefined;
+  folder.notes = folder.notes.filter((x) => x.id !== noteId);
+  folders = [...folders.filter((x) => x.id !== folderId), folder];
+  cookie.set("folders", JSON.stringify(folders));
+  return folders;
+};
+
+export const RemoveFolder = (folderId: string) => {
+  const folders = GetFolders().filter((x) => x.id !== folderId);
+  cookie.set("folders", JSON.stringify(folders));
+};

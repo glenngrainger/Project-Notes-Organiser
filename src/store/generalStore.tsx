@@ -2,6 +2,8 @@ import create from "zustand";
 import { Note } from "../helper/cookieHelper";
 
 interface General {
+  isBulkMode: boolean;
+  selectedItems: string[];
   currentDirectoryView: "folder" | "notes";
   setDirectoryView: (view: "folder" | "notes") => void;
   isCompletedSelected: boolean;
@@ -16,10 +18,15 @@ interface General {
   setEditingNoteData: (key: string, value: any) => void;
   resetEditingNoteData: () => void;
   replaceEditingNoteData: (note: Note) => void;
+  setSelectedItems: (ids: string[]) => void;
+  setBulkMode: (state: boolean) => void;
 }
 
 const useStore = create<General>((set) => ({
+  isBulkMode: false,
+  selectedItems: [],
   currentDirectoryView: "folder",
+  isCompleteMode: false,
   setDirectoryView: (view: "folder" | "notes") =>
     set(() => ({ currentDirectoryView: view })),
   isCompletedSelected: false,
@@ -48,6 +55,11 @@ const useStore = create<General>((set) => ({
     set((prev) => {
       return { editingNoteData: note };
     }),
+  setSelectedItems: (items) =>
+    set((prev) => {
+      return { selectedItems: items };
+    }),
+  setBulkMode: (state) => set(() => ({ isBulkMode: state })),
 }));
 
 export const useGeneral = () => useStore((state) => state);

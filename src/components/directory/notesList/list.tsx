@@ -8,10 +8,6 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
     useFolder();
   const { noteSelected, selectedNoteId } = useNote();
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const listItemClickedHandler = (id: string) => {
     if (currentDirectoryView === "folder") {
       folderSelected(id);

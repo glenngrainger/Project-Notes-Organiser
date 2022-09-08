@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import { NoteNav } from "../src/components/navigation";
 import { Directory } from "../src/components/directory";
 import { Editor } from "../src/components/editor";
 import useNote from "../src/hooks/useNote";
@@ -49,8 +48,9 @@ const Home: NextPage = () => {
       react query, get data from cookie or server based on is logged in
        
       */}
-      <NoteNav />
-      <div className='bg-slate-50 flex' style={{ height: "calc(100% - 4rem)" }}>
+
+      {/* <NoteNav /> */}
+      <div className='bg-slate-50 flex h-screen'>
         <Directory />
         <Editor />
       </div>

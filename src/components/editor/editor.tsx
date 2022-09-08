@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { AiFillGoogleCircle } from "react-icons/ai";
 import useForm from "../../hooks/useForm";
 import { useGeneral } from "../../store/generalStore";
 
@@ -12,6 +13,7 @@ const Editor = () => {
 
   return (
     <div className='flex-[3] border-slate-900 bg-slate-200 border-x-2'>
+      <Header />
       <div className='min-h-[3rem] bg-slate-900 flex p-2'>
         {/* Input/title */}
         <input
@@ -48,4 +50,22 @@ const Editor = () => {
     </div>
   );
 };
+
+const Header = () => {
+  return (
+    <div className='min-h-[4rem] flex justify-evenly bg-gray-700'>
+      <div className='flex-1 flex items-center justify-end'>
+        <button
+          className='rounded bg-slate-50 px-2 font-semibold py-1 mr-2 flex items-center disabled:bg-slate-300 cursor-not-allowed'
+          disabled
+          title='Google implementation coming soon'
+        >
+          Login with Google
+          <AiFillGoogleCircle className='ml-1 text-blue-700' />
+        </button>
+      </div>
+    </div>
+  );
+};
+
 export default Editor;
