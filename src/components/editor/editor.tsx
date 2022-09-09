@@ -23,6 +23,18 @@ const Editor = () => {
     }
   };
 
+  const StatusBadge = () => (
+    <div
+      className={`flex items-center justify-center rounded-lg px-2 text-xs text-slate-50 font-semibold ml-4 ${
+        editingNoteData?.isComplete
+          ? "bg-green-900"
+          : "bg-slate-50 text-slate-900"
+      }`}
+    >
+      {editingNoteData?.isComplete ? "Complete" : "In Progress"}
+    </div>
+  );
+
   return (
     <div className="flex-[3] border-slate-900 bg-slate-200 border-x-2">
       <Header />
@@ -40,9 +52,7 @@ const Editor = () => {
             {/* button group */}
             {!isCreatingNote && (
               <React.Fragment>
-                <div className="bg-green-900 flex items-center justify-center rounded-lg px-2 text-xs text-slate-50 font-semibold ml-4">
-                  Completed
-                </div>
+                <StatusBadge />
                 <div className="ml-auto flex items-center gap-3">
                   <button className="bg-red-900 text-sm py-1 px-2 rounded-sm text-slate-50 font-semibold">
                     Delete

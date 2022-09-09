@@ -120,7 +120,7 @@ const Directory = () => {
     return (
       <div className="flex-1 bg-gray-700 flex items-center justify-center flex-col relative">
         <h5 className="text-lg font-semibold text-slate-50">
-          Creating a note for {selectedFolder?.name}
+          Creating a note for folder {selectedFolder?.name}
         </h5>
         <span className="text-sm font-medium text-gray-500">
           Directory locked in create mode
@@ -147,7 +147,6 @@ const Directory = () => {
                   {selectedFolder?.name || "No Folder Selected"}
                 </div>
               </div>
-
               <RiArrowGoBackLine
                 className="ml-auto cursor-pointer"
                 onClick={() => directoryChangeHandler("folder")}
