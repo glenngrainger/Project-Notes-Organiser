@@ -17,6 +17,7 @@ import { getFolders, getNotes } from "../../query/queries";
 import { useGeneral } from "../../store/generalStore";
 import { FolderForm, Modal, Footer } from "../modal";
 import List from "./notesList/list";
+import { RiArrowGoBackLine } from "react-icons/ri";
 
 const Directory = () => {
   const {
@@ -96,37 +97,38 @@ const Directory = () => {
   };
 
   return (
-    <div className='flex-1 border-x-2 border-slate-900 flex flex-col'>
-      <div className='flex justify-evenly bg-gray-700'>
-        <div className='flex-1'>
-          <div className='flex items-center p-2 text-slate-50'>
+    <div className="flex-1 border-x-2 border-slate-900 flex flex-col">
+      <div className="flex justify-evenly bg-gray-700">
+        <div className="flex-1">
+          <div className="flex items-center p-2 text-slate-50 min-h-[4rem]">
             {currentDirectoryView === "notes" ? (
               <>
-                <BsFileFill className='mr-4 text-lg' />
+                <BsFileFill className="mr-4 text-lg" />
                 <div>
-                  <p>Selected Folder</p>
-                  <span className='font-semibold text-sm'>
+                  <div className="font-semibold text-sm">
                     {selectedFolder?.name || "No Folder Selected"}
-                  </span>
+                  </div>
                 </div>
-                <BsCaretDownFill
-                  className='ml-auto cursor-pointer'
+
+                <RiArrowGoBackLine
+                  className="ml-auto cursor-pointer"
                   onClick={() => setDirectoryView("folder")}
                 />
               </>
             ) : (
               <>
-                <BsFolderFill className='mr-4 text-lg' />
+                <BsFolderFill className="mr-4 text-lg" />
                 <div>
-                  <p>Selected Folder</p>
-                  <span className='font-semibold text-sm'>
+                  <span className="font-semibold text-sm">
                     {folders?.length || 0} Folder
                   </span>
                 </div>
-                <BsCaretUpFill
-                  className='ml-auto cursor-pointer'
-                  onClick={(e) => setDirectoryView("notes")}
-                />
+                {/* {selectedFolderId && (
+                  <BsCaretUpFill
+                    className="ml-auto cursor-pointer"
+                    onClick={(e) => setDirectoryView("notes")}
+                  />
+                )} */}
               </>
             )}
           </div>
@@ -134,17 +136,17 @@ const Directory = () => {
       </div>
       {currentDirectoryView === "notes" && <NotesTabs />}
       <input
-        className='bg-slate-50 w-full p-2 text-sm opacity-75 hover:opacity-100'
+        className="bg-slate-50 w-full p-2 text-sm opacity-75 hover:opacity-100"
         placeholder={`Search ${currentDirectoryView}`}
         onChange={searchChangeHandler}
       ></input>
       <List data={getListData} />
       <div
-        className='mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full'
+        className="mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full"
         style={{ position: "relative" }}
       >
         <button
-          className='rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium'
+          className="rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium"
           onClick={newResourceClickedHandler}
         >
           New {currentDirectoryView === "notes" ? "Note" : "Folder"}
@@ -173,7 +175,7 @@ const NotesTabs = () => {
   };
 
   return (
-    <div className='flex min-h-[2rem] text-sm'>
+    <div className="flex min-h-[2rem] text-sm">
       <div
         className={style(!isCompletedSelected)}
         onClick={() => setIsCompletedSelected(false)}
@@ -210,17 +212,17 @@ const Menu = () => {
   return (
     <React.Fragment>
       <BsArrowUpSquareFill
-        className='text-3xl font-semibold text-slate-900 cursor-pointer'
+        className="text-3xl font-semibold text-slate-900 cursor-pointer"
         onClick={toggleVisibility}
       />
       {isVisible && (
         <ul
-          className='bg-slate-900 font-semibold rounded text-slate-50 text-sm'
+          className="bg-slate-900 font-semibold rounded text-slate-50 text-sm"
           style={{ position: "absolute", bottom: "3.5rem", right: "0.5rem" }}
         >
           {options.map((x) => (
             <li
-              className='p-2 flex items-center justify-between gap-2 cursor-pointer'
+              className="p-2 flex items-center justify-between gap-2 cursor-pointer"
               onClick={x.action}
             >
               {x.text}

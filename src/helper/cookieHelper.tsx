@@ -42,7 +42,7 @@ export const CreateNote = (folderId: string, note: Note) => {
 
   note.id = uuidv4();
   note.name = note.name;
-  note.folderId = note.folderId;
+  note.folderId = folderId;
   note.isComplete = false;
   note.created = moment(moment.now()).format("YYYY-MM-DD hh:mm");
   note.updated = moment(moment.now()).format("YYYY-MM-DD hh:mm");

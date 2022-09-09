@@ -19,15 +19,7 @@ const useNote = () => {
     // flushSync(() => {
     setSelectedNoteId(id);
     var note = selectedNote(id);
-    console.log(note);
     if (note) replaceEditingNoteData(note);
-
-    // Set editing note
-
-    // });
-    // if (selectedNote) {
-    //   replaceEditingNoteData(selectedNote);
-    // }
   };
 
   const selectedNote = (id: string) => {
@@ -35,11 +27,9 @@ const useNote = () => {
       "notes",
       selectedFolderId,
     ]) as Note[];
-    console.log(data);
     if (data) {
       var note = data.find((x) => x.id === id);
       if (note) {
-        // replaceEditingNoteData({ ...note });
         return { ...note };
       }
       return undefined;
