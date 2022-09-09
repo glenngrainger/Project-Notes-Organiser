@@ -123,7 +123,7 @@ const Directory = () => {
           Creating a note for folder {selectedFolder?.name}
         </h5>
         <span className="text-sm font-medium text-gray-500">
-          Directory locked in create mode
+          Directory is locked in create mode
         </span>
         <button
           className="absolute bottom-2 left-2 bg-slate-50 py-1 px-2 rounded-sm font-semibold text-slate-900"
@@ -174,7 +174,7 @@ const Directory = () => {
             : notesSearchInput
         }
         onChange={searchChangeHandler}
-      ></input>
+      />
       <List data={getListData} />
       <div
         className="mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full"

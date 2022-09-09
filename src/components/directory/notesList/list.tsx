@@ -22,22 +22,30 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
     id && setSelectedItems([...selectedItems, id]);
   };
 
+  if (data.length === 0) {
+    return (
+      <div className="py-4 px-2 text-sm font-semibold text-slate-900">
+        No results found
+      </div>
+    );
+  }
+
   return (
-    <ul className='overflow-y-auto'>
+    <ul className="overflow-y-auto">
       {data.map((x) => (
         <li
           key={x.id}
-          className='p-2 flex items-center bg-slate-50 border-y-2 border-gray-100 hover:bg-slate-200 cursor-pointer justify-between'
+          className="p-2 flex items-center bg-slate-50 border-y-2 border-gray-100 hover:bg-slate-200 cursor-pointer justify-between"
           onClick={() => listItemClickedHandler(x?.id || "")}
         >
           <div>
-            <p className='font-semibold'>{x.name}</p>
-            <span className='font-bold text-sm'>
+            <p className="font-semibold">{x.name}</p>
+            <span className="font-bold text-sm">
               {x?.created !== undefined && x?.created.toString()}
             </span>
           </div>
           {isBulkMode && (
-            <input type='checkbox' onClick={() => selectedItemHandler(x.id)} />
+            <input type="checkbox" onClick={() => selectedItemHandler(x.id)} />
           )}
         </li>
       ))}
