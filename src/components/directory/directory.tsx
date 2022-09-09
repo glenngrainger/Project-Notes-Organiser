@@ -18,6 +18,7 @@ import { useGeneral } from "../../store/generalStore";
 import { FolderForm, Modal, Footer } from "../modal";
 import List from "./notesList/list";
 import { RiArrowGoBackLine } from "react-icons/ri";
+import { Folder, Note } from "../../helper/cookieHelper";
 
 const Directory = () => {
   const {
@@ -67,26 +68,29 @@ const Directory = () => {
     }
   }, [currentDirectoryView]);
 
+  const filterResults = (data: any, filterTerm: string) => {
+    if (data === undefined) return [];
+    if (filterTerm === "") return data;
+    return data.filter((x: any) =>
+      x?.name.toLowerCase().includes(filterTerm.toLowerCase())
+    );
+  };
+
   const getListData = useMemo(() => {
     if (currentDirectoryView === "folder") {
-      return folders || [];
+      if (folders === undefined) return [];
+      return filterResults(folders, folderSearchInput);
     } else {
       if (notes === undefined) return [];
       if (isCompletedSelected) {
-        return notes.filter(
-          (x) =>
-            x.isComplete &&
-            (notesSearchInput !== ""
-              ? x.name.toLowerCase().includes(notesSearchInput.toLowerCase())
-              : true)
+        return filterResults(
+          notes.filter((x) => x.isComplete),
+          notesSearchInput
         );
       }
-      return notes.filter(
-        (x) =>
-          !x.isComplete &&
-          (notesSearchInput !== ""
-            ? x.name.toLowerCase().includes(notesSearchInput.toLowerCase())
-            : true)
+      return filterResults(
+        notes.filter((x) => !x.isComplete),
+        notesSearchInput
       );
     }
   }, [

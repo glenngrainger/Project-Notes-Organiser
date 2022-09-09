@@ -21,7 +21,7 @@ const useMutationHelper = () => {
       addNote(data.folderId, data.note),
     {
       onSuccess: (newNote) => {
-        queryClient.setQueryData(["notes", selectedFolderId], (prev: any) => [
+        queryClient.setQueryData(["notes", newNote.folderId], (prev: any) => [
           newNote,
           ...prev,
         ]);
@@ -35,10 +35,13 @@ const useMutationHelper = () => {
       updateNote(data.folderId, data.note),
     {
       onSuccess: (updatedNote: Note | undefined) => {
-        queryClient.setQueryData(["notes", selectedFolderId], (prev: any) => [
-          updatedNote,
-          ...prev.filter((x: Note) => x.id !== updatedNote?.id),
-        ]);
+        queryClient.setQueryData(
+          ["notes", updatedNote?.folderId],
+          (prev: any) => [
+            updatedNote,
+            ...prev.filter((x: Note) => x.id !== updatedNote?.id),
+          ]
+        );
       },
     }
   );
