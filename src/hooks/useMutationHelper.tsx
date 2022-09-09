@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "react-query";
 import { Folder, Note, RemoveNote } from "../helper/cookieHelper";
-import { addFolder, addNote, updateNote } from "../query/queries";
+import { addFolder, addNote, deleteNote, updateNote } from "../query/queries";
 import { useGeneral } from "../store/generalStore";
 
 const useMutationHelper = () => {
@@ -43,7 +43,25 @@ const useMutationHelper = () => {
     }
   );
 
-  return { addFolderMutation, addNoteMutation, updateNoteMutation } as const;
+  const deleteNoteMutation = useMutation(
+    (data: { noteId: string; folderId: string }) =>
+      deleteNote(data.noteId, data.folderId),
+    {
+      onSuccess: (removedNote: Note | undefined) => {
+        queryClient.setQueryData(
+          ["notes", removedNote?.folderId],
+          (prev: any) => [...prev.filter((x: Note) => x.id !== removedNote?.id)]
+        );
+      },
+    }
+  );
+
+  return {
+    addFolderMutation,
+    addNoteMutation,
+    updateNoteMutation,
+    deleteNoteMutation,
+  } as const;
 };
 
 export default useMutationHelper;

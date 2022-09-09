@@ -5,6 +5,7 @@ import {
   GetFolders as GetFoldersCookie,
   GetNotes,
   Note,
+  RemoveNote,
   UpdateNote,
 } from "../helper/cookieHelper";
 
@@ -29,4 +30,8 @@ export const addNote = async (folderId: string, note: Note) => {
 
 export const updateNote = async (folderId: string, note: Note) => {
   return UpdateNote(folderId, note);
+};
+
+export const deleteNote = async (noteId: string, folderId: string) => {
+  return RemoveNote(noteId, folderId);
 };

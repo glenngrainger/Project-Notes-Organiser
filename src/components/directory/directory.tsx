@@ -257,6 +257,7 @@ const Menu = () => {
         >
           {options.map((x) => (
             <li
+              key={x.text}
               className="p-2 flex items-center justify-between gap-2 cursor-pointer"
               onClick={x.action}
             >

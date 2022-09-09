@@ -11,8 +11,14 @@ const MarkDownEditorNoSSR = dynamic(
 );
 
 const Editor = () => {
-  const { editingNoteData, setEditingNoteData, isCreatingNote } = useGeneral();
-  const { addNoteMutation, updateNoteMutation } = useMutationHelper();
+  const {
+    editingNoteData,
+    setEditingNoteData,
+    isCreatingNote,
+    replaceEditingNoteData,
+  } = useGeneral();
+  const { addNoteMutation, updateNoteMutation, deleteNoteMutation } =
+    useMutationHelper();
   const setNoteStatusHandler = () => {
     setEditingNoteData("isComplete", !editingNoteData?.isComplete);
     if (editingNoteData?.folderId) {
@@ -35,6 +41,16 @@ const Editor = () => {
     </div>
   );
 
+  const deleteHandler = () => {
+    if (editingNoteData?.id && editingNoteData.folderId) {
+      deleteNoteMutation.mutate({
+        noteId: editingNoteData?.id,
+        folderId: editingNoteData?.folderId,
+      });
+      replaceEditingNoteData(undefined);
+    }
+  };
+
   return (
     <div className="flex-[3] border-slate-900 bg-slate-200 border-x-2">
       <Header />
@@ -54,7 +70,10 @@ const Editor = () => {
               <React.Fragment>
                 <StatusBadge />
                 <div className="ml-auto flex items-center gap-3">
-                  <button className="bg-red-900 text-sm py-1 px-2 rounded-sm text-slate-50 font-semibold">
+                  <button
+                    className="bg-red-900 text-sm py-1 px-2 rounded-sm text-slate-50 font-semibold"
+                    onClick={deleteHandler}
+                  >
                     Delete
                   </button>
                   <button
@@ -67,7 +86,12 @@ const Editor = () => {
               </React.Fragment>
             )}
           </div>
-          <MarkDownEditorNoSSR />
+          <div
+            className="overflow-y-auto"
+            style={{ height: "calc(100vh - 7rem)" }}
+          >
+            <MarkDownEditorNoSSR />
+          </div>
         </React.Fragment>
       )}
       {editingNoteData === undefined && (
