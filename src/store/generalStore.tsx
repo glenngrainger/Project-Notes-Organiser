@@ -17,7 +17,7 @@ interface General {
   editingNoteData: Note | undefined;
   setEditingNoteData: (key: string, value: any) => void;
   resetEditingNoteData: () => void;
-  replaceEditingNoteData: (note: Note) => void;
+  replaceEditingNoteData: (note: Note | undefined) => void;
   setSelectedItems: (ids: string[]) => void;
   setBulkMode: (state: boolean) => void;
 }

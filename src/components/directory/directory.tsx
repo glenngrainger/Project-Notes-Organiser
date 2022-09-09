@@ -25,8 +25,11 @@ const Directory = () => {
     selectedFolderId,
     setIsCreatingNote,
     resetEditingNoteData,
+    replaceEditingNoteData,
     setDirectoryView,
     isCompletedSelected,
+    isCreatingNote,
+    selectedItems,
   } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
   const { addFolderMutation } = useMutationHelper();
@@ -96,42 +99,64 @@ const Directory = () => {
     setSearchInput(e.currentTarget.value);
   };
 
+  const exitCreateModeHandler = () => {
+    replaceEditingNoteData(undefined);
+    setIsCreatingNote(false);
+  };
+
+  if (isCreatingNote) {
+    return (
+      <div className="flex-1 bg-gray-700 flex items-center justify-center flex-col relative">
+        <h5 className="text-lg font-semibold text-slate-50">
+          Creating a note for {selectedFolder?.name}
+        </h5>
+        <span className="text-sm font-medium text-gray-500">
+          Directory locked in create mode
+        </span>
+        <button
+          className="absolute bottom-2 left-2 bg-slate-50 py-1 px-2 rounded-sm font-semibold text-slate-900"
+          onClick={exitCreateModeHandler}
+        >
+          Exit create mode
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="flex-1 border-x-2 border-slate-900 flex flex-col">
-      <div className="flex justify-evenly bg-gray-700">
-        <div className="flex-1">
-          <div className="flex items-center p-2 text-slate-50 min-h-[4rem]">
-            {currentDirectoryView === "notes" ? (
-              <>
-                <BsFileFill className="mr-4 text-lg" />
-                <div>
-                  <div className="font-semibold text-sm">
-                    {selectedFolder?.name || "No Folder Selected"}
-                  </div>
+      <div className="justify-evenly bg-gray-700">
+        <div className="flex items-center p-2 text-slate-50 min-h-[4rem]">
+          {currentDirectoryView === "notes" ? (
+            <>
+              <BsFileFill className="mr-4 text-lg" />
+              <div>
+                <div className="font-semibold text-sm">
+                  {selectedFolder?.name || "No Folder Selected"}
                 </div>
+              </div>
 
-                <RiArrowGoBackLine
-                  className="ml-auto cursor-pointer"
-                  onClick={() => setDirectoryView("folder")}
-                />
-              </>
-            ) : (
-              <>
-                <BsFolderFill className="mr-4 text-lg" />
-                <div>
-                  <span className="font-semibold text-sm">
-                    {folders?.length || 0} Folder
-                  </span>
-                </div>
-                {/* {selectedFolderId && (
+              <RiArrowGoBackLine
+                className="ml-auto cursor-pointer"
+                onClick={() => setDirectoryView("folder")}
+              />
+            </>
+          ) : (
+            <>
+              <BsFolderFill className="mr-4 text-lg" />
+              <div>
+                <span className="font-semibold text-sm">
+                  {folders?.length || 0} Folder
+                </span>
+              </div>
+              {/* {selectedFolderId && (
                   <BsCaretUpFill
                     className="ml-auto cursor-pointer"
                     onClick={(e) => setDirectoryView("notes")}
                   />
                 )} */}
-              </>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
       {currentDirectoryView === "notes" && <NotesTabs />}
