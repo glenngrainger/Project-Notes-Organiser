@@ -9,12 +9,14 @@ const useFolder = () => {
     setDirectoryView,
     currentDirectoryView,
     selectedFolderId,
+    setNotesSearchInput,
   } = useGeneral();
   const queryClient = useQueryClient();
 
   const folderSelected = (id: string) => {
     setSelectedFolderId(id);
     setDirectoryView("notes");
+    setNotesSearchInput("");
   };
 
   const selectedFolder = useMemo(() => {

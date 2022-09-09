@@ -30,11 +30,14 @@ const Directory = () => {
     isCompletedSelected,
     isCreatingNote,
     selectedItems,
+    setFolderSearchInput,
+    folderSearchInput,
+    notesSearchInput,
+    setNotesSearchInput,
   } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
   const { addFolderMutation } = useMutationHelper();
   const { selectedFolder } = useFolder();
-  const [searchInput, setSearchInput] = useState("");
 
   const { data: folders } = useQuery(
     ["folders"],
@@ -73,16 +76,16 @@ const Directory = () => {
         return notes.filter(
           (x) =>
             x.isComplete &&
-            (searchInput !== ""
-              ? x.name.toLowerCase().includes(searchInput.toLowerCase())
+            (notesSearchInput !== ""
+              ? x.name.toLowerCase().includes(notesSearchInput.toLowerCase())
               : true)
         );
       }
       return notes.filter(
         (x) =>
           !x.isComplete &&
-          (searchInput !== ""
-            ? x.name.toLowerCase().includes(searchInput.toLowerCase())
+          (notesSearchInput !== ""
+            ? x.name.toLowerCase().includes(notesSearchInput.toLowerCase())
             : true)
       );
     }
@@ -92,16 +95,25 @@ const Directory = () => {
     currentDirectoryView,
     selectedFolderId,
     isCompletedSelected,
-    searchInput,
+    notesSearchInput,
+    folderSearchInput,
   ]);
 
   const searchChangeHandler = (e: any) => {
-    setSearchInput(e.currentTarget.value);
+    if (currentDirectoryView === "folder") {
+      setFolderSearchInput(e.currentTarget.value);
+    } else {
+      setNotesSearchInput(e.currentTarget.value);
+    }
   };
 
   const exitCreateModeHandler = () => {
     replaceEditingNoteData(undefined);
     setIsCreatingNote(false);
+  };
+
+  const directoryChangeHandler = (view: "folder" | "notes") => {
+    setDirectoryView(view);
   };
 
   if (isCreatingNote) {
@@ -138,7 +150,7 @@ const Directory = () => {
 
               <RiArrowGoBackLine
                 className="ml-auto cursor-pointer"
-                onClick={() => setDirectoryView("folder")}
+                onClick={() => directoryChangeHandler("folder")}
               />
             </>
           ) : (
@@ -149,12 +161,6 @@ const Directory = () => {
                   {folders?.length || 0} Folder
                 </span>
               </div>
-              {/* {selectedFolderId && (
-                  <BsCaretUpFill
-                    className="ml-auto cursor-pointer"
-                    onClick={(e) => setDirectoryView("notes")}
-                  />
-                )} */}
             </>
           )}
         </div>
@@ -163,6 +169,11 @@ const Directory = () => {
       <input
         className="bg-slate-50 w-full p-2 text-sm opacity-75 hover:opacity-100"
         placeholder={`Search ${currentDirectoryView}`}
+        value={
+          currentDirectoryView === "folder"
+            ? folderSearchInput
+            : notesSearchInput
+        }
         onChange={searchChangeHandler}
       ></input>
       <List data={getListData} />

@@ -2,6 +2,10 @@ import create from "zustand";
 import { Note } from "../helper/cookieHelper";
 
 interface General {
+  folderSearchInput: string;
+  setFolderSearchInput: (value: string) => void;
+  notesSearchInput: string;
+  setNotesSearchInput: (value: string) => void;
   isBulkMode: boolean;
   selectedItems: string[];
   currentDirectoryView: "folder" | "notes";
@@ -23,6 +27,10 @@ interface General {
 }
 
 const useStore = create<General>((set) => ({
+  notesSearchInput: "",
+  setNotesSearchInput: (value) => set(() => ({ notesSearchInput: value })),
+  folderSearchInput: "",
+  setFolderSearchInput: (value) => set(() => ({ folderSearchInput: value })),
   isBulkMode: false,
   selectedItems: [],
   currentDirectoryView: "folder",
