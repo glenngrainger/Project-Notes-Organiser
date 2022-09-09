@@ -57,7 +57,7 @@ const Editor = () => {
           className='bg-slate-50 flex items-center justify-center'
           style={{ height: "calc(100vh - 4rem)" }}
         >
-          <h3>No notes added!</h3>
+          <h3>No note selected!</h3>
         </div>
       )}
     </div>

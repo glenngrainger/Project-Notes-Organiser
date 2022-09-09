@@ -9,12 +9,6 @@ import {
 } from "react-icons/bs";
 import { MdDelete } from "react-icons/md";
 import { useQuery, useQueryClient } from "react-query";
-import {
-  CreateFolder,
-  Folder,
-  GetFolders,
-  Note,
-} from "../../helper/cookieHelper";
 import useFolder from "../../hooks/useFolder";
 import useModal from "../../hooks/useModal";
 import useMutationHelper from "../../hooks/useMutationHelper";
