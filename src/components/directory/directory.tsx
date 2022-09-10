@@ -1,5 +1,5 @@
 import React from "react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { BsArrowUpSquareFill, BsFileFill, BsFolderFill } from "react-icons/bs";
 import { MdRemoveCircle } from "react-icons/md";
 import { useQuery } from "react-query";
@@ -151,6 +151,10 @@ const Directory = () => {
             folderId: selectedFolderId,
             noteIds: selectedItems,
           });
+        // Clear editing note if the note has been deleted
+        editingNoteData?.id &&
+          selectedItems.includes(editingNoteData.id) &&
+          replaceEditingNoteData(undefined);
       }
     } else if (
       bulkMode === "set complete" &&
@@ -163,11 +167,8 @@ const Directory = () => {
           noteIds: selectedItems,
           status: true,
         });
-      // If note currently being edited has been updated, update the editingnote status
-      if (
-        editingNoteData?.folderId &&
-        selectedItems.includes(editingNoteData?.folderId)
-      ) {
+      // If note is currently being edited has been updated, update the editingnote status
+      if (editingNoteData?.id && selectedItems.includes(editingNoteData?.id)) {
         setEditingNoteData("isComplete", true);
       }
     }
@@ -314,7 +315,8 @@ const NotesTabs = () => {
 
 const Menu = () => {
   const { isVisible, toggleVisibility } = useVisibility(false);
-  const { setIsBulkMode, setBulkMode, isBulkMode } = useGeneral();
+  const { setIsBulkMode, setBulkMode, isBulkMode, currentDirectoryView } =
+    useGeneral();
 
   const deleteHandler = () => {
     setIsBulkMode(true);
@@ -357,16 +359,20 @@ const Menu = () => {
           className="bg-slate-900 font-semibold rounded text-slate-50 text-sm"
           style={{ position: "absolute", bottom: "3.5rem", right: "0.5rem" }}
         >
-          {options.map((x) => (
-            <li
-              key={x.text}
-              className="p-2 flex items-center gap-2 cursor-pointer"
-              onClick={x.action}
-            >
-              {x.icon}
-              {x.text}
-            </li>
-          ))}
+          {options.map(
+            (x) =>
+              (currentDirectoryView === "notes" ||
+                (currentDirectoryView === "folder" && !x.isNoteOnlyOption)) && (
+                <li
+                  key={x.text}
+                  className="p-2 flex items-center gap-2 cursor-pointer"
+                  onClick={x.action}
+                >
+                  {x.icon}
+                  {x.text}
+                </li>
+              )
+          )}
         </ul>
       )}
     </React.Fragment>
