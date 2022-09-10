@@ -11,7 +11,9 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
   const { isBulkMode, selectedItems, setSelectedItems } = useGeneral();
 
   const listItemClickedHandler = (id: string) => {
-    if (currentDirectoryView === "folder") {
+    if (isBulkMode) {
+      selectedItemHandler(id);
+    } else if (currentDirectoryView === "folder") {
       folderSelected(id);
     } else {
       noteSelected(id);
@@ -19,7 +21,12 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
   };
 
   const selectedItemHandler = (id: string | undefined) => {
-    id && setSelectedItems([...selectedItems, id]);
+    if (id === undefined) return;
+    if (selectedItems.includes(id)) {
+      setSelectedItems([...selectedItems.filter((x) => x !== id)]);
+    } else {
+      setSelectedItems([...selectedItems, id]);
+    }
   };
 
   if (data.length === 0) {
@@ -45,7 +52,11 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
             </span>
           </div>
           {isBulkMode && (
-            <input type="checkbox" onClick={() => selectedItemHandler(x.id)} />
+            <input
+              type="checkbox"
+              onClick={() => selectedItemHandler(x.id)}
+              checked={selectedItems.includes(x.id || "")}
+            />
           )}
         </li>
       ))}

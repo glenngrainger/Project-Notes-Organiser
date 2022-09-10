@@ -1,14 +1,8 @@
 import React from "react";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  BsArrowUpSquareFill,
-  BsCaretDownFill,
-  BsCaretUpFill,
-  BsFileFill,
-  BsFolderFill,
-} from "react-icons/bs";
-import { MdDelete } from "react-icons/md";
-import { useQuery, useQueryClient } from "react-query";
+import { useCallback, useMemo, useState } from "react";
+import { BsArrowUpSquareFill, BsFileFill, BsFolderFill } from "react-icons/bs";
+import { MdRemoveCircle } from "react-icons/md";
+import { useQuery } from "react-query";
 import useFolder from "../../hooks/useFolder";
 import useModal from "../../hooks/useModal";
 import useMutationHelper from "../../hooks/useMutationHelper";
@@ -18,7 +12,7 @@ import { useGeneral } from "../../store/generalStore";
 import { FolderForm, Modal, Footer } from "../modal";
 import List from "./notesList/list";
 import { RiArrowGoBackLine } from "react-icons/ri";
-import { Folder, Note } from "../../helper/cookieHelper";
+import { AiFillCheckSquare } from "react-icons/ai";
 
 const Directory = () => {
   const {
@@ -35,6 +29,11 @@ const Directory = () => {
     folderSearchInput,
     notesSearchInput,
     setNotesSearchInput,
+    isBulkMode,
+    bulkMode,
+    setIsBulkMode,
+    setSelectedItems,
+    setBulkMode,
   } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
   const { addFolderMutation } = useMutationHelper();
@@ -101,6 +100,7 @@ const Directory = () => {
     isCompletedSelected,
     notesSearchInput,
     folderSearchInput,
+    selectedItems,
   ]);
 
   const searchChangeHandler = (e: any) => {
@@ -120,6 +120,17 @@ const Directory = () => {
     setDirectoryView(view);
   };
 
+  const exitBulkModeHandler = () => {
+    setSelectedItems([]);
+    setIsBulkMode(false);
+    setBulkMode("");
+  };
+
+  const confirmBulkModeHandler = () => {
+    setIsBulkMode(false);
+    setBulkMode("");
+  };
+
   if (isCreatingNote) {
     return (
       <div className="flex-1 bg-gray-700 flex items-center justify-center flex-col relative">
@@ -127,7 +138,7 @@ const Directory = () => {
           Creating a note for folder {selectedFolder?.name}
         </h5>
         <span className="text-sm font-medium text-gray-500">
-          Directory is locked in create mode
+          Directory is fully locked until note is created
         </span>
         <button
           className="absolute bottom-2 left-2 bg-slate-50 py-1 px-2 rounded-sm font-semibold text-slate-900"
@@ -143,29 +154,37 @@ const Directory = () => {
     <div className="flex-1 border-x-2 border-slate-900 flex flex-col">
       <div className="justify-evenly bg-gray-700">
         <div className="flex items-center p-2 text-slate-50 min-h-[4rem]">
-          {currentDirectoryView === "notes" ? (
-            <>
-              <BsFileFill className="mr-4 text-lg" />
-              <div>
-                <div className="font-semibold text-sm">
-                  {selectedFolder?.name || "No Folder Selected"}
-                </div>
-              </div>
-              <RiArrowGoBackLine
-                className="ml-auto cursor-pointer"
-                onClick={() => directoryChangeHandler("folder")}
-              />
-            </>
-          ) : (
-            <>
-              <BsFolderFill className="mr-4 text-lg" />
-              <div>
-                <span className="font-semibold text-sm">
-                  {folders?.length || 0} Folder
-                </span>
-              </div>
-            </>
+          {isBulkMode && (
+            <React.Fragment>
+              <p>
+                Select {currentDirectoryView} to {bulkMode}
+              </p>
+            </React.Fragment>
           )}
+          {!isBulkMode &&
+            (currentDirectoryView === "notes" ? (
+              <>
+                <BsFileFill className="mr-4 text-lg" />
+                <div>
+                  <div className="font-semibold text-sm">
+                    {selectedFolder?.name || "No Folder Selected"}
+                  </div>
+                </div>
+                <RiArrowGoBackLine
+                  className="ml-auto cursor-pointer"
+                  onClick={() => directoryChangeHandler("folder")}
+                />
+              </>
+            ) : (
+              <>
+                <BsFolderFill className="mr-4 text-lg" />
+                <div>
+                  <span className="font-semibold text-sm">
+                    {folders?.length || 0} Folder
+                  </span>
+                </div>
+              </>
+            ))}
         </div>
       </div>
       {currentDirectoryView === "notes" && <NotesTabs />}
@@ -184,13 +203,32 @@ const Directory = () => {
         className="mt-auto bg-slate-200 flex gap-2 p-2 items-center w-full"
         style={{ position: "relative" }}
       >
-        <button
-          className="rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium"
-          onClick={newResourceClickedHandler}
-        >
-          New {currentDirectoryView === "notes" ? "Note" : "Folder"}
-        </button>
-        <Menu />
+        {isBulkMode ? (
+          <React.Fragment>
+            <button
+              className="rounded bg-red-900 w-full px-2 py-1 text-slate-50 font-medium"
+              onClick={exitBulkModeHandler}
+            >
+              Cancel
+            </button>
+            <button
+              className="rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium"
+              onClick={confirmBulkModeHandler}
+            >
+              Confirm
+            </button>
+          </React.Fragment>
+        ) : (
+          <React.Fragment>
+            <button
+              className="rounded bg-blue-700 w-full px-2 py-1 text-slate-50 font-medium"
+              onClick={newResourceClickedHandler}
+            >
+              New {currentDirectoryView === "notes" ? "Note" : "Folder"}
+            </button>
+            <Menu />
+          </React.Fragment>
+        )}
       </div>
       {isVisible && (
         <Modal
@@ -233,20 +271,37 @@ const NotesTabs = () => {
 
 const Menu = () => {
   const { isVisible, toggleVisibility } = useVisibility(false);
-  const { setBulkMode, isBulkMode } = useGeneral();
+  const { setIsBulkMode, setBulkMode, isBulkMode } = useGeneral();
 
   const deleteHandler = () => {
-    setBulkMode(true);
+    setIsBulkMode(true);
+    setBulkMode("delete");
+    toggleVisibility();
   };
 
   const setCompleteHandler = () => {
-    setBulkMode(true);
+    setIsBulkMode(true);
+    setBulkMode("set complete");
+    toggleVisibility();
   };
 
-  const options: { text: string; action: () => void }[] = [
-    { text: "Bulk Delete", action: deleteHandler },
-    { text: "Bulk Set Complete", action: setCompleteHandler },
-  ];
+  const options: {
+    text: string;
+    action: () => void;
+    isNoteOnlyOption?: boolean;
+    icon: React.ReactNode;
+  }[] = useMemo(
+    () => [
+      { text: "Delete", action: deleteHandler, icon: <MdRemoveCircle /> },
+      {
+        text: "Set Complete",
+        action: setCompleteHandler,
+        icon: <AiFillCheckSquare />,
+        isNoteOnlyOption: true,
+      },
+    ],
+    []
+  );
 
   return (
     <React.Fragment>
@@ -262,11 +317,11 @@ const Menu = () => {
           {options.map((x) => (
             <li
               key={x.text}
-              className="p-2 flex items-center justify-between gap-2 cursor-pointer"
+              className="p-2 flex items-center gap-2 cursor-pointer"
               onClick={x.action}
             >
+              {x.icon}
               {x.text}
-              {/* <MdDelete onClick={() => {}} /> */}
             </li>
           ))}
         </ul>

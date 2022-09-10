@@ -8,6 +8,7 @@ interface General {
   setNotesSearchInput: (value: string) => void;
   isBulkMode: boolean;
   selectedItems: string[];
+  bulkMode: "delete" | "set complete" | "";
   currentDirectoryView: "folder" | "notes";
   setDirectoryView: (view: "folder" | "notes") => void;
   isCompletedSelected: boolean;
@@ -23,10 +24,12 @@ interface General {
   resetEditingNoteData: () => void;
   replaceEditingNoteData: (note: Note | undefined) => void;
   setSelectedItems: (ids: string[]) => void;
-  setBulkMode: (state: boolean) => void;
+  setIsBulkMode: (state: boolean) => void;
+  setBulkMode: (value: "delete" | "set complete" | "") => void;
 }
 
 const useStore = create<General>((set) => ({
+  bulkMode: "",
   notesSearchInput: "",
   setNotesSearchInput: (value) => set(() => ({ notesSearchInput: value })),
   folderSearchInput: "",
@@ -67,7 +70,8 @@ const useStore = create<General>((set) => ({
     set((prev) => {
       return { selectedItems: items };
     }),
-  setBulkMode: (state) => set(() => ({ isBulkMode: state })),
+  setIsBulkMode: (state) => set(() => ({ isBulkMode: state })),
+  setBulkMode: (value) => set(() => ({ bulkMode: value })),
 }));
 
 export const useGeneral = () => useStore((state) => state);
