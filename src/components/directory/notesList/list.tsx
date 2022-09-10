@@ -46,7 +46,7 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
           <div>
             <p className="font-semibold">{x.name}</p>
             <span className="font-bold text-sm">
-              {x?.created !== undefined && x?.created.toString()}
+              {x?.updated !== undefined && x?.updated.toString()}
             </span>
           </div>
           {isBulkMode && (

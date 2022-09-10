@@ -39,6 +39,8 @@ export const CreateNote = (folderId: string, note: Note) => {
   let foldersString = cookie.get("folders");
 
   let folders = foldersString ? (JSON.parse(foldersString) as Folder[]) : [];
+  let folder = folders.find((x) => x.id === folderId);
+  if (folder === undefined) return;
 
   note.id = uuidv4();
   note.name = note.name;
@@ -47,7 +49,9 @@ export const CreateNote = (folderId: string, note: Note) => {
   note.created = moment(moment.now()).format("YYYY-MM-DD hh:mm");
   note.updated = moment(moment.now()).format("YYYY-MM-DD hh:mm");
 
-  folders.find((x) => x.id === folderId)?.notes.push(note);
+  folder.notes.push(note);
+  folder.updated = moment(moment.now()).format("YYYY-MM-DD hh:mm");
+
   cookie.set("folders", JSON.stringify(folders));
   return note;
 };
@@ -57,15 +61,14 @@ export const UpdateNote = (folderId: string, note: Note) => {
 
   let folders = foldersString ? (JSON.parse(foldersString) as Folder[]) : [];
 
-  var noteToUpdate = folders
-    .find((x) => x.id === folderId)
-    ?.notes.find((x) => x.id === note.id);
-
-  if (!noteToUpdate) return;
+  var folder = folders.find((x) => x.id === folderId);
+  var noteToUpdate = folder?.notes.find((x) => x.id === note.id);
+  if (!noteToUpdate || !folder) return;
+  folder.updated = moment(moment.now()).format("YYYY-MM-DD hh:mm");
   noteToUpdate.name = note.name;
   noteToUpdate.content = note.content;
   noteToUpdate.isComplete = note.isComplete;
-  noteToUpdate.updated = new Date();
+  noteToUpdate.updated = moment(moment.now()).format("YYYY-MM-DD hh:mm");
 
   cookie.set("folders", JSON.stringify(folders));
   return noteToUpdate;

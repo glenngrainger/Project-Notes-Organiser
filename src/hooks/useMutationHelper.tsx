@@ -29,7 +29,7 @@ const useMutationHelper = () => {
       addNote(data.folderId, data.note),
     {
       onSuccess: (newNote) => {
-        queryClient.setQueryData(["notes", newNote.folderId], (prev: any) => [
+        queryClient.setQueryData(["notes", newNote?.folderId], (prev: any) => [
           newNote,
           ...prev,
         ]);
@@ -42,7 +42,7 @@ const useMutationHelper = () => {
     (data: { folderId: string; note: Note }) =>
       updateNote(data.folderId, data.note),
     {
-      onSuccess: (updatedNote: Note | undefined) => {
+      onSuccess: (updatedNote) => {
         queryClient.setQueryData(
           ["notes", updatedNote?.folderId],
           (prev: any) => [
@@ -58,7 +58,7 @@ const useMutationHelper = () => {
     (data: { noteId: string; folderId: string }) =>
       deleteNote(data.noteId, data.folderId),
     {
-      onSuccess: (removedNote: Note | undefined) => {
+      onSuccess: (removedNote) => {
         queryClient.setQueryData(
           ["notes", removedNote?.folderId],
           (prev: any) => [...prev.filter((x: Note) => x.id !== removedNote?.id)]
@@ -71,7 +71,7 @@ const useMutationHelper = () => {
     (data: { folderId: string; noteIds: string[] }) =>
       bulkDeleteNotes(data.folderId, data.noteIds),
     {
-      onSuccess: (removedNoteIds: string[] | undefined) => {
+      onSuccess: (removedNoteIds) => {
         queryClient.setQueryData(["notes", selectedFolderId], (prev: any) => [
           ...prev.filter((x: Note) => !removedNoteIds?.includes(x.id || "")),
         ]);
@@ -82,7 +82,7 @@ const useMutationHelper = () => {
   const bulkDeleteFolderMutation = useMutation(
     (data: { folderIds: string[] }) => bulkRemoveFolders(data.folderIds),
     {
-      onSuccess: (removedFolderIds: string[]) => {
+      onSuccess: (removedFolderIds) => {
         queryClient.setQueryData(["folders"], (prev: any) => [
           ...prev.filter(
             (x: Folder) => !removedFolderIds?.includes(x.id || "")
@@ -96,7 +96,7 @@ const useMutationHelper = () => {
     (data: { folderId: string; noteIds: string[]; status: boolean }) =>
       bulkSetNoteStatus(data.folderId, data.noteIds, data.status),
     {
-      onSuccess: (updatedNoteIds: string[] | undefined) => {
+      onSuccess: (updatedNoteIds) => {
         queryClient.setQueryData(
           ["notes", selectedFolderId],
           (prev: Note[] | undefined) => {
