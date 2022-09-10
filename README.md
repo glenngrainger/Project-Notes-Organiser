@@ -20,3 +20,5 @@ This is a website for organising notes when reviewing PRs. The current markdown 
 **Future additions**
 * Google login and a server
 * Welcome tutorial
+
+![image](https://user-images.githubusercontent.com/91460978/189502146-fcd8083f-5511-4fa5-a9d3-9c29ab348c57.png)
