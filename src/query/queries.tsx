@@ -1,4 +1,7 @@
 import {
+  BulkRemoveFolders,
+  BulkRemoveNotes,
+  BulkSetNoteStatus,
   CreateFolder,
   CreateNote,
   Folder,
@@ -34,4 +37,20 @@ export const updateNote = async (folderId: string, note: Note) => {
 
 export const deleteNote = async (noteId: string, folderId: string) => {
   return RemoveNote(noteId, folderId);
+};
+
+export const bulkDeleteNotes = async (folderId: string, noteIds: string[]) => {
+  return BulkRemoveNotes(folderId, noteIds);
+};
+
+export const bulkRemoveFolders = async (folderIds: string[]) => {
+  return BulkRemoveFolders(folderIds);
+};
+
+export const bulkSetNoteStatus = async (
+  folderId: string,
+  noteIds: string[],
+  status: boolean
+) => {
+  return BulkSetNoteStatus(folderId, noteIds, status);
 };

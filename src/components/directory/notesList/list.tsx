@@ -1,12 +1,10 @@
-import { useCallback, useEffect } from "react";
 import { Folder, Note } from "../../../helper/cookieHelper";
 import useNote from "../../../hooks/useNote";
 import useFolder from "../../../hooks/useFolder";
 import { useGeneral } from "../../../store/generalStore";
 
 const List = ({ data }: { data: Note[] | Folder[] }) => {
-  const { folderSelected, currentDirectoryView, selectedFolderId } =
-    useFolder();
+  const { folderSelected, currentDirectoryView } = useFolder();
   const { noteSelected, selectedNoteId } = useNote();
   const { isBulkMode, selectedItems, setSelectedItems } = useGeneral();
 
@@ -54,7 +52,7 @@ const List = ({ data }: { data: Note[] | Folder[] }) => {
           {isBulkMode && (
             <input
               type="checkbox"
-              onClick={() => selectedItemHandler(x.id)}
+              onChange={() => selectedItemHandler(x.id)}
               checked={selectedItems.includes(x.id || "")}
             />
           )}

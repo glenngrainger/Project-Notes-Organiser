@@ -1,6 +1,14 @@
 import { useMutation, useQueryClient } from "react-query";
 import { Folder, Note, RemoveNote } from "../helper/cookieHelper";
-import { addFolder, addNote, deleteNote, updateNote } from "../query/queries";
+import {
+  addFolder,
+  addNote,
+  bulkDeleteNotes,
+  deleteNote,
+  updateNote,
+  bulkRemoveFolders,
+  bulkSetNoteStatus,
+} from "../query/queries";
 import { useGeneral } from "../store/generalStore";
 
 const useMutationHelper = () => {
@@ -59,11 +67,63 @@ const useMutationHelper = () => {
     }
   );
 
+  const bulkDeleteNoteMutation = useMutation(
+    (data: { folderId: string; noteIds: string[] }) =>
+      bulkDeleteNotes(data.folderId, data.noteIds),
+    {
+      onSuccess: (removedNoteIds: string[] | undefined) => {
+        queryClient.setQueryData(["notes", selectedFolderId], (prev: any) => [
+          ...prev.filter((x: Note) => !removedNoteIds?.includes(x.id || "")),
+        ]);
+      },
+    }
+  );
+
+  const bulkDeleteFolderMutation = useMutation(
+    (data: { folderIds: string[] }) => bulkRemoveFolders(data.folderIds),
+    {
+      onSuccess: (removedFolderIds: string[]) => {
+        queryClient.setQueryData(["folders"], (prev: any) => [
+          ...prev.filter(
+            (x: Folder) => !removedFolderIds?.includes(x.id || "")
+          ),
+        ]);
+      },
+    }
+  );
+
+  const bulkSetNoteStatusMutation = useMutation(
+    (data: { folderId: string; noteIds: string[]; status: boolean }) =>
+      bulkSetNoteStatus(data.folderId, data.noteIds, data.status),
+    {
+      onSuccess: (updatedNoteIds: string[] | undefined) => {
+        queryClient.setQueryData(
+          ["notes", selectedFolderId],
+          (prev: Note[] | undefined) => {
+            if (prev === undefined) return [];
+            let newNotesArry: Note[] = [];
+            for (let note of prev) {
+              if (updatedNoteIds?.includes(note.id || "")) {
+                newNotesArry.push({ ...note, isComplete: true });
+              } else {
+                newNotesArry.push({ ...note });
+              }
+            }
+            return newNotesArry;
+          }
+        );
+      },
+    }
+  );
+
   return {
     addFolderMutation,
     addNoteMutation,
     updateNoteMutation,
     deleteNoteMutation,
+    bulkDeleteNoteMutation,
+    bulkDeleteFolderMutation,
+    bulkSetNoteStatusMutation,
   } as const;
 };
 

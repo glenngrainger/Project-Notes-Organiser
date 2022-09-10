@@ -16,6 +16,7 @@ import { AiFillCheckSquare } from "react-icons/ai";
 
 const Directory = () => {
   const {
+    editingNoteData,
     currentDirectoryView,
     selectedFolderId,
     setIsCreatingNote,
@@ -34,9 +35,15 @@ const Directory = () => {
     setIsBulkMode,
     setSelectedItems,
     setBulkMode,
+    setEditingNoteData,
   } = useGeneral();
   const { isVisible, show, hide, saveData, updateFormData } = useModal();
-  const { addFolderMutation } = useMutationHelper();
+  const {
+    addFolderMutation,
+    bulkDeleteNoteMutation,
+    bulkDeleteFolderMutation,
+    bulkSetNoteStatusMutation,
+  } = useMutationHelper();
   const { selectedFolder } = useFolder();
 
   const { data: folders } = useQuery(
@@ -76,6 +83,7 @@ const Directory = () => {
   };
 
   const getListData = useMemo(() => {
+    console.log("render list");
     if (currentDirectoryView === "folder") {
       if (folders === undefined) return [];
       return filterResults(folders, folderSearchInput);
@@ -129,6 +137,41 @@ const Directory = () => {
   const confirmBulkModeHandler = () => {
     setIsBulkMode(false);
     setBulkMode("");
+    if (selectedItems.length === 0) return;
+    if (bulkMode === "delete") {
+      if (currentDirectoryView === "folder") {
+        bulkDeleteFolderMutation.mutate({ folderIds: selectedItems });
+        // Clear selected note only if the note is in a deleted folder
+        editingNoteData?.folderId &&
+          selectedItems.includes(editingNoteData?.folderId) &&
+          replaceEditingNoteData(undefined);
+      } else {
+        selectedFolderId &&
+          bulkDeleteNoteMutation.mutate({
+            folderId: selectedFolderId,
+            noteIds: selectedItems,
+          });
+      }
+    } else if (
+      bulkMode === "set complete" &&
+      currentDirectoryView === "notes"
+    ) {
+      // Also update editing note data if it was being edited
+      selectedFolderId &&
+        bulkSetNoteStatusMutation.mutate({
+          folderId: selectedFolderId,
+          noteIds: selectedItems,
+          status: true,
+        });
+      // If note currently being edited has been updated, update the editingnote status
+      if (
+        editingNoteData?.folderId &&
+        selectedItems.includes(editingNoteData?.folderId)
+      ) {
+        setEditingNoteData("isComplete", true);
+      }
+    }
+    setSelectedItems([]);
   };
 
   if (isCreatingNote) {
