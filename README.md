@@ -1,14 +1,11 @@
-# PR Notes Organiser
-
-This is a website for organising notes when reviewing PRs. The current markdown editor on github is rather small making comments difficult to format, therefore this organiser can be used to track issues while reviewing. The website was developed in such a way to make future implementation with a server a simple process - should be as simple as adding API calls which return the same data as the cookie helper
+# Project Notes Organiser
 
 **Features**
 * Organise notes in folders
-* Create/edit/delete notes/folders
-* Markdown editor to create/edit notes
+* Create/edit/delete notes and folders
 * Set notes as complete/in-progress
 * Search
-* Bulk actions (delete, set progress)
+* Bulk actions (delete, set complete)
 
 **Technologies used**
 * NextJS
@@ -17,8 +14,6 @@ This is a website for organising notes when reviewing PRs. The current markdown 
 * React Query
 * Tailwind CSS
 
-**Future additions**
-* Google login and a server
-* Welcome tutorial
+![image](https://github.com/glenngrainger/Project-Notes-Organiser/assets/91460978/d7dba267-feeb-4ff6-bedb-4d2eaa6cb380)
 
-![image](https://user-images.githubusercontent.com/91460978/189502146-fcd8083f-5511-4fa5-a9d3-9c29ab348c57.png)
+![image](https://github.com/glenngrainger/Project-Notes-Organiser/assets/91460978/2d2a6a17-e292-4338-a31a-82a2019eb619)
