@@ -9,7 +9,7 @@ const MarkDownEditor = () => {
     isCreatingNote,
     selectedNoteId,
   } = useGeneral();
-  let easyMDEElement = useRef<EasyMDE | null>(null);
+  let easyMDEElement = useRef<EasyMDE | undefined | null>(null);
 
   const onChangeHandler = useCallback(() => {
     const value = easyMDEElement.current?.value() || "";
@@ -30,7 +30,7 @@ const MarkDownEditor = () => {
 
     return () => {
       easyMDEElement.current?.cleanup;
-      easyMDEElement.current = null;
+      easyMDEElement.current = undefined;
       document.querySelectorAll(".EasyMDEContainer").forEach((x) => x.remove());
     };
   }, [isCreatingNote, selectedNoteId]);
