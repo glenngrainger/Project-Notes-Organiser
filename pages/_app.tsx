@@ -9,10 +9,10 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <link
-        rel='stylesheet'
-        href='https://unpkg.com/easymde/dist/easymde.min.css'
+        rel="stylesheet"
+        href="https://unpkg.com/easymde/dist/easymde.min.css"
       />
-      <script src='https://unpkg.com/easymde/dist/easymde.min.js'></script>
+      <script src="https://unpkg.com/easymde/dist/easymde.min.js"></script>
       <Component {...pageProps} />
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>

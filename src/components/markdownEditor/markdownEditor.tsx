@@ -9,7 +9,7 @@ const MarkDownEditor = () => {
     isCreatingNote,
     selectedNoteId,
   } = useGeneral();
-  let easyMDEElement = useRef<EasyMDE | undefined>();
+  let easyMDEElement = useRef<EasyMDE | null>(null);
 
   const onChangeHandler = useCallback(() => {
     const value = easyMDEElement.current?.value() || "";
@@ -25,12 +25,12 @@ const MarkDownEditor = () => {
         minHeight: "500px",
       });
       easyMDEElement.current.codemirror.on("change", onChangeHandler);
-      easyMDEElement.current.value(editingNoteData.content);
+      easyMDEElement.current.value(editingNoteData?.content || "");
     }
 
     return () => {
       easyMDEElement.current?.cleanup;
-      easyMDEElement.current = undefined;
+      easyMDEElement.current = null;
       document.querySelectorAll(".EasyMDEContainer").forEach((x) => x.remove());
     };
   }, [isCreatingNote, selectedNoteId]);

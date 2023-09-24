@@ -83,7 +83,6 @@ const Directory = () => {
   };
 
   const getListData = useMemo(() => {
-    console.log("render list");
     if (currentDirectoryView === "folder") {
       if (folders === undefined) return [];
       return filterResults(folders, folderSearchInput);

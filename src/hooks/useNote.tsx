@@ -1,5 +1,3 @@
-import { useCallback, useMemo } from "react";
-import { flushSync } from "react-dom";
 import { useQueryClient } from "react-query";
 import { Note } from "../helper/cookieHelper";
 import { useGeneral } from "../store/generalStore";
@@ -7,7 +5,6 @@ import { useGeneral } from "../store/generalStore";
 const useNote = () => {
   const {
     selectedNoteId,
-    setDirectoryView,
     currentDirectoryView,
     setSelectedNoteId,
     selectedFolderId,
@@ -16,7 +13,6 @@ const useNote = () => {
   const queryClient = useQueryClient();
 
   const noteSelected = (id: string) => {
-    // flushSync(() => {
     setSelectedNoteId(id);
     var note = selectedNote(id);
     if (note) replaceEditingNoteData(note);
@@ -39,7 +35,6 @@ const useNote = () => {
 
   return {
     noteSelected,
-    // selectedNote,
     currentDirectoryView,
     selectedNoteId,
   } as const;

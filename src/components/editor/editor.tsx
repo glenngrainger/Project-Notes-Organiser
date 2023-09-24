@@ -1,7 +1,5 @@
 import dynamic from "next/dynamic";
 import React from "react";
-import { AiFillGoogleCircle } from "react-icons/ai";
-import useForm from "../../hooks/useForm";
 import useMutationHelper from "../../hooks/useMutationHelper";
 import { useGeneral } from "../../store/generalStore";
 
@@ -17,8 +15,7 @@ const Editor = () => {
     isCreatingNote,
     replaceEditingNoteData,
   } = useGeneral();
-  const { addNoteMutation, updateNoteMutation, deleteNoteMutation } =
-    useMutationHelper();
+  const { updateNoteMutation, deleteNoteMutation } = useMutationHelper();
   const setNoteStatusHandler = () => {
     setEditingNoteData("isComplete", !editingNoteData?.isComplete);
     if (editingNoteData?.folderId) {
@@ -107,20 +104,7 @@ const Editor = () => {
 };
 
 const Header = () => {
-  return (
-    <div className="min-h-[4rem] flex justify-evenly bg-gray-700">
-      <div className="flex-1 flex items-center justify-end">
-        <button
-          className="rounded bg-slate-50 px-2 font-semibold py-1 mr-2 flex items-center disabled:bg-slate-300 cursor-not-allowed"
-          disabled
-          title="Google implementation coming soon"
-        >
-          Login with Google
-          <AiFillGoogleCircle className="ml-1 text-blue-700" />
-        </button>
-      </div>
-    </div>
-  );
+  return <div className="min-h-[4rem] flex justify-evenly bg-gray-700"></div>;
 };
 
 export default Editor;

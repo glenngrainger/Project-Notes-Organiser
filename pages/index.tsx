@@ -1,10 +1,8 @@
 import type { NextPage } from "next";
 import { Directory } from "../src/components/directory";
 import { Editor } from "../src/components/editor";
-import useNote from "../src/hooks/useNote";
 import useMutationHelper from "../src/hooks/useMutationHelper";
 import { useGeneral } from "../src/store/generalStore";
-import { useCallback } from "react";
 
 const Home: NextPage = () => {
   const {

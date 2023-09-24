@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { Folder, Note, RemoveNote } from "../helper/cookieHelper";
+import { Folder, Note } from "../helper/cookieHelper";
 import {
   addFolder,
   addNote,
